@@ -83,4 +83,5 @@ if __name__ == '__main__':
     with open('ustvgo.m3u', 'w') as file:
         file.write(playlist_text)
 
+    driver.close()
     driver.quit()
