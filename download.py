@@ -19,6 +19,8 @@ if __name__ == '__main__':
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)
     firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
+    firefox_profile.set_preference("dom.disable_beforeunload", True)
+    firefox_profile.set_preference("browser.tabs.warnOnClose", False)
 
     driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
