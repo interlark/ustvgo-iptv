@@ -14,7 +14,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 if __name__ == '__main__':
     ff_options = FirefoxOptions()
-    #ff_options.add_argument('--headless')
+    ff_options.add_argument('--headless')
 
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)

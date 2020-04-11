@@ -22,4 +22,24 @@ pip3 install -r requirements.txt
 
 Use download.py to download playlist from [ustvgo](http://ustvgo.tv/)
 
+```bash
+python3 download.py
+```
+
+```text 
+[1/81] Successfully collected link for GSN
+[2/81] Successfully collected link for LIFETIME MOVIES
+[3/81] Successfully collected link for ANIMAL PLANET
+[4/81] Successfully collected link for NBC SPORTS
+...
+```
+
 Use update.py to update authentication key
+```bash
+python3 update.py
+```
+
+```text
+Recieved key: c2VakmPyX...aW52dRVzoTI1MA==
+Updating ustvgo.m3u playlist...
+```
