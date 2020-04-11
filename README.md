@@ -15,7 +15,7 @@ rm geckodriver-v0.26.0-linux64.tar.gz
 Then,
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Usage
