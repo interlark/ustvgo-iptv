@@ -34,7 +34,6 @@ if __name__ == '__main__':
     for link in root_div.select('li>strong>a[href]'):
         page_links.append(link.get('href'))
 
-    page_links = set(page_links)
     channel_list = [
         re.sub(r'^https://ustvgo.tv/|/$', '', i)
         .replace('-live', '')
