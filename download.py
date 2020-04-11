@@ -5,7 +5,7 @@ import sys
 from time import sleep
 
 from bs4 import BeautifulSoup
-from selenium import webdriver
+from seleniumwire import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,7 +14,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 if __name__ == '__main__':
     ff_options = FirefoxOptions()
-    ff_options.add_argument('--headless')
+    #ff_options.add_argument('--headless')
 
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)
@@ -24,20 +24,26 @@ if __name__ == '__main__':
 
     driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
+    sleep(0.5)
 
     MAX_RETRIES = 3
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.pis-title-link')))
-    sleep(0.5)
-
     soup = BeautifulSoup(driver.page_source, features='lxml')
-
+    root_div = soup.select_one('div.article-container')
     page_links = []
-    for link in soup.findAll('a', attrs={'class': 'pis-title-link','href': re.compile('^https://ustvgo.tv.+?')}):
+    for link in root_div.select('li>strong>a[href]'):
         page_links.append(link.get('href'))
 
     page_links = set(page_links)
-    channel_list = [re.split(r'.tv/|-channel|-live', i)[1].upper().replace('-', ' ').rstrip('/') for i in page_links]
+    channel_list = [
+        re.sub(r'^https://ustvgo.tv/|/$', '', i)
+        .replace('-live', '')
+        .replace('-channel', '')
+        .replace('-free', '')
+        .replace('-streaming', '')
+        .replace('-', ' ')
+        .upper() for i in page_links
+    ]
     video_links = []
 
     for item_n, link in enumerate(page_links):
@@ -45,20 +51,23 @@ if __name__ == '__main__':
         while True:
             try:
                 driver.get(link)
-                iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.iframe-container>iframe')))
-                driver.switch_to.frame(iframe)
-                html_source = driver.page_source
-                try:
-                    video_link = re.findall('(http.*m3u8.*)', html_source)[0]
+                sleep(0.5)
+
+                playlists = [x for x in driver.requests if '/playlist.m3u8?wmsAuthSign' in x.path]
+                if playlists:
+                    video_link = playlists[0].path
                     print('[%d/%d] Successfully collected link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
-                except:
+                else:
                     video_link = ''
                     print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                 video_links.append(video_link)
-                sleep(0.5)
+                sleep(3)
+                del driver.requests
+                if not video_link:
+                    raise Exception()
                 break
-            except TimeoutException:
-                print('Timeout, retry...')
+            except:
+                print('[%d] Retry...' % retry, file=sys.stderr)
                 retry += 1
                 if retry > MAX_RETRIES:
                     print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)

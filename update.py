@@ -6,7 +6,7 @@ import sys
 from time import sleep
 
 from bs4 import BeautifulSoup
-from selenium import webdriver
+from seleniumwire import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -29,21 +29,17 @@ if __name__ == '__main__':
 
     driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
-
+    sleep(0.5)
 
     MAX_RETRIES = 3
 
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.pis-title-link')))
-    sleep(0.5)
-
     soup = BeautifulSoup(driver.page_source, features='lxml')
-
+    root_div = soup.select_one('div.article-container')
     page_links = []
-    for link in soup.findAll('a', attrs={'class': 'pis-title-link','href': re.compile('^https://ustvgo.tv.+?')}):
+    for link in root_div.select('li>strong>a[href]'):
         page_links.append(link.get('href'))
 
     page_links = set(page_links)
-    channel_list = [re.split(r'.tv/|-channel|-live', i)[1].upper().replace('-', ' ').rstrip('/') for i in page_links]
     video_links = []
     captured_key = None
 
@@ -54,28 +50,26 @@ if __name__ == '__main__':
         while True:
             try:
                 driver.get(link)
-                iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.iframe-container>iframe')))
-                driver.switch_to.frame(iframe)
-                html_source = driver.page_source
-                try:
-                    video_link = re.findall('(http.*m3u8.*)', html_source)[0]
+                sleep(0.5)
+
+                playlists = [x for x in driver.requests if '/playlist.m3u8?wmsAuthSign' in x.path]
+                if playlists:
+                    video_link = playlists[0].path
                     m_key = re.search('(?<=wmsAuthSign=).*$',video_link)
                     if m_key:
                         captured_key = m_key.group()
                         print('Recieved key: %s' % captured_key, file=sys.stderr)
                         break
-                    else:
-                        print('Warning, no wmsAuthKey found in response!', file=sys.stderr)
-                except:
-                    video_link = ''
-                video_links.append(video_link)
-                sleep(0.5)
-                break
+
             except TimeoutException:
-                print('Timeout, retry...')
+                print('Failed to get key, retry(%d) ...' % retry, file=sys.stderr)
                 retry += 1
                 if retry > MAX_RETRIES:
                     break
+
+    if not captured_key:
+        print('Exiting...')
+        exit(1)
 
     print('Updating ustvgo.m3u playlist...', file=sys.stderr)
 
