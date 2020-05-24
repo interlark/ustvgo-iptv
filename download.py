@@ -12,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
+PROXY = None
+
 if __name__ == '__main__':
     ff_options = FirefoxOptions()
     ff_options.add_argument('--headless')
@@ -22,7 +24,19 @@ if __name__ == '__main__':
     firefox_profile.set_preference("dom.disable_beforeunload", True)
     firefox_profile.set_preference("browser.tabs.warnOnClose", False)
 
-    driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
+    set_seleniumwire_options = {
+        'connection_timeout': None,
+        'verify_ssl': False,
+        'suppress_connection_errors': False 
+    }
+
+    if PROXY:
+        set_seleniumwire_options['proxy'] = {
+            'http': f'http://{PROXY}',
+            'https': f'https://{PROXY}'
+        }
+
+    driver = webdriver.Firefox(seleniumwire_options=set_seleniumwire_options, options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
     sleep(0.5)
 
