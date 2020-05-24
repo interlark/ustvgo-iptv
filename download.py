@@ -59,6 +59,7 @@ if __name__ == '__main__':
                 else:
                     video_link = ''
                     print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    sleep(1.5)
                 video_links.append(video_link)
                 sleep(3)
                 del driver.requests
@@ -82,6 +83,7 @@ if __name__ == '__main__':
         for name, url in zip_pair:
             file.write('#EXTINF:-1,' + name + '\n')
             file.write("#EXTVLCOPT:http-user-agent=\"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:71.0) Gecko/20100101 Firefox/71.0\"\n")
+            file.write("#EXTVLCOPT:http-referrer=\"https://ustvgo.tv\"\n")
             file.write(url + '\n\n')
 
     driver.close()
