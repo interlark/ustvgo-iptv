@@ -24,9 +24,10 @@ if __name__ == '__main__':
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)
     firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
-    firefox_profile.set_preference("dom.disable_beforeunload", True)
-    firefox_profile.set_preference("browser.tabs.warnOnClose", False)
-
+    firefox_profile.set_preference('dom.disable_beforeunload', True)
+    firefox_profile.set_preference('browser.tabs.warnOnClose', False)
+    firefox_profile.set_preference('media.volume_scale', '0.0')
+    
     driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
     sleep(0.5)
@@ -50,8 +51,15 @@ if __name__ == '__main__':
         while True:
             try:
                 driver.get(link)
-                sleep(0.5)
 
+                sleep(0.5)
+                player_frame = driver.find_element_by_class_name('iframe-container')
+                if player_frame:
+                    player_frame.click()
+                    sleep(0.5)
+                else:
+                    print('Warning, player frame isn\'t found', file=sys.stderr)
+                
                 playlists = [x for x in driver.requests if '/playlist.m3u8?wmsAuthSign' in x.path]
                 if playlists:
                     video_link = playlists[0].path
@@ -60,8 +68,10 @@ if __name__ == '__main__':
                         captured_key = m_key.group()
                         print('Recieved key: %s' % captured_key, file=sys.stderr)
                         break
+                else:
+                    raise Exception()
 
-            except TimeoutException:
+            except:
                 print('Failed to get key, retry(%d) ...' % retry, file=sys.stderr)
                 retry += 1
                 if retry > MAX_RETRIES:

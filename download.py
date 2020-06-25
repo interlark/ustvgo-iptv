@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-PROXY = None
+PROXY = None  # 'host:port' or None
 
 if __name__ == '__main__':
     ff_options = FirefoxOptions()
@@ -21,8 +21,9 @@ if __name__ == '__main__':
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)
     firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
-    firefox_profile.set_preference("dom.disable_beforeunload", True)
-    firefox_profile.set_preference("browser.tabs.warnOnClose", False)
+    firefox_profile.set_preference('dom.disable_beforeunload', True)
+    firefox_profile.set_preference('browser.tabs.warnOnClose', False)
+    firefox_profile.set_preference('media.volume_scale', '0.0')
 
     set_seleniumwire_options = {
         'connection_timeout': None,
@@ -64,8 +65,15 @@ if __name__ == '__main__':
         while True:
             try:
                 driver.get(link)
-                sleep(0.5)
 
+                sleep(0.5)
+                player_frame = driver.find_element_by_class_name('iframe-container')
+                if player_frame:
+                    player_frame.click()
+                    sleep(0.5)
+                else:
+                    print('Warning, player frame isn\'t found', file=sys.stderr)
+                
                 playlists = [x for x in driver.requests if '/playlist.m3u8?wmsAuthSign' in x.path]
                 if playlists:
                     video_link = playlists[0].path
@@ -74,6 +82,7 @@ if __name__ == '__main__':
                     video_link = ''
                     print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                     sleep(1.5)
+
                 video_links.append(video_link)
                 sleep(3)
                 del driver.requests
