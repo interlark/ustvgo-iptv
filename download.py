@@ -37,6 +37,7 @@ if __name__ == '__main__':
             'https': f'https://{PROXY}'
         }
 
+    # pylint: disable=unexpected-keyword-arg
     driver = webdriver.Firefox(seleniumwire_options=set_seleniumwire_options, options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
     sleep(0.5)
@@ -96,12 +97,12 @@ if __name__ == '__main__':
                     print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                     break
 
-    print('Generating ustvgo.m3u playlist...', file=sys.stderr)
+    print('Generating ustvgo.m3u8 playlist...', file=sys.stderr)
 
     zip_pair = sorted(zip(channel_list, video_links))
     zip_pair = list(filter(lambda t: '' not in t, zip_pair))
 
-    with open('ustvgo.m3u', 'w') as file:
+    with open('ustvgo.m3u8', 'w') as file:
         file.write('#EXTM3U\n\n')
         for name, url in zip_pair:
             file.write('#EXTINF:-1,' + name + '\n')

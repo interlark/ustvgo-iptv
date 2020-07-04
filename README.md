@@ -41,10 +41,10 @@ python3 update.py
 
 ```text
 Recieved key: c2VakmPyX...aW52dRVzoTI1MA==
-Updating ustvgo.m3u playlist...
+Updating ustvgo.m3u8 playlist...
 ```
 
 Play collected playlist:
 ```bash
-vlc ustvgo.m3u --adaptive-use-access
+vlc ustvgo.m3u8 --adaptive-use-access
 ```

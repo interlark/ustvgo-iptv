@@ -14,8 +14,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 if __name__ == '__main__':
-    if not os.path.isfile('ustvgo.m3u'):
-        print('playlist ustvgo.m3u not found', file=sys.stderr)
+    if not os.path.isfile('ustvgo.m3u8'):
+        print('playlist ustvgo.m3u8 not found', file=sys.stderr)
         exit(1)
 
     ff_options = FirefoxOptions()
@@ -81,12 +81,12 @@ if __name__ == '__main__':
         print('Exiting...')
         exit(1)
 
-    print('Updating ustvgo.m3u playlist...', file=sys.stderr)
+    print('Updating ustvgo.m3u8 playlist...', file=sys.stderr)
 
-    playlist_text = open('ustvgo.m3u', 'r').read()
+    playlist_text = open('ustvgo.m3u8', 'r').read()
     playlist_text = re.sub('(?<=wmsAuthSign=).*(?=\n)', captured_key, playlist_text)
 
-    with open('ustvgo.m3u', 'w') as file:
+    with open('ustvgo.m3u8', 'w') as file:
         file.write(playlist_text)
 
     driver.close()
