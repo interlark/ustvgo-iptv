@@ -20,7 +20,7 @@ pip3 install -r requirements.txt
 
 ## Usage
 
-Use download.py to download playlist from [ustvgo](http://ustvgo.tv/):
+Use download.py to download playlist _ustvgo.m3u8_ from [ustvgo](http://ustvgo.tv/):
 
 ```bash
 python3 download.py
