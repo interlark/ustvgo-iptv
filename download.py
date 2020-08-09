@@ -88,7 +88,6 @@ if __name__ == '__main__':
                     print('[%d/%d] Successfully collected link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                 else:
                     video_link = ''
-                    print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                     sleep(1.5)
 
                 sleep(3)
