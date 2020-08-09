@@ -7,11 +7,13 @@ from time import sleep
 
 from bs4 import BeautifulSoup
 from seleniumwire import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+
+TIMEOUT = 10
 
 if __name__ == '__main__':
     if not os.path.isfile('ustvgo.m3u8'):
@@ -52,17 +54,22 @@ if __name__ == '__main__':
             try:
                 driver.get(link)
 
-                sleep(0.5)
-                player_frame = driver.find_element_by_class_name('iframe-container')
-                if player_frame:
-                    player_frame.click()
-                    sleep(0.5)
-                else:
-                    print('Warning, player frame isn\'t found', file=sys.stderr)
+                try:
+                    driver.find_element_by_xpath("//h5[text()='This channel requires our VPN to watch!']")
+                    need_vpn = True
+                except NoSuchElementException:
+                    need_vpn = False
+
+                if need_vpn:
+                    break
                 
-                playlists = [x for x in driver.requests if '/playlist.m3u8?wmsAuthSign' in x.path]
-                if playlists:
-                    video_link = playlists[0].path
+                try:
+                    playlist = driver.wait_for_request('/playlist.m3u8?wmsAuthSign', timeout=TIMEOUT)
+                except TimeoutException:
+                    playlist = None
+
+                if playlist:
+                    video_link = playlist.path
                     m_key = re.search('(?<=wmsAuthSign=).*$',video_link)
                     if m_key:
                         captured_key = m_key.group()
@@ -78,7 +85,7 @@ if __name__ == '__main__':
                     break
 
     if not captured_key:
-        print('Exiting...')
+        print('Exiting...', file=sys.stderr)
         exit(1)
 
     print('Updating ustvgo.m3u8 playlist...', file=sys.stderr)
