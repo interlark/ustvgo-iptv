@@ -48,25 +48,16 @@ if __name__ == '__main__':
     root_div = soup.select_one('div.article-container')
     page_links = []
     for link in root_div.select('li>strong>a[href]'):
-        page_links.append(link.get('href'))
+        page_links.append((link.text.strip(), link.get('href')))
 
-    channel_list = [
-        re.sub(r'^https://ustvgo.tv/|/$', '', i)
-        .replace('-live', '')
-        .replace('-channel', '')
-        .replace('-free', '')
-        .replace('-streaming', '')
-        .replace('-', ' ')
-        .upper() for i in page_links
-    ]
     video_links = []
-
-    for item_n, link in enumerate(page_links):
+    item_no = 0
+    for item_n, link in page_links:
         retry = 1
+        item_no += 1
         while True:
             try:
                 driver.get(link)
-
                 try:
                     driver.find_element_by_xpath("//h5[text()='This channel requires our VPN to watch!']")
                     need_vpn = True
@@ -74,7 +65,7 @@ if __name__ == '__main__':
                     need_vpn = False
 
                 if need_vpn:
-                    print('[%d/%d] Channel %s needs VPN to be grabbed, skipping' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    print('[%d/%d] Channel %s needs VPN to be grabbed, skipping' % (item_no, len(page_links), item_n), file=sys.stderr)
                     break
 
                 try:
@@ -84,8 +75,8 @@ if __name__ == '__main__':
                 
                 if playlist:
                     video_link = playlist.path
-                    video_links.append((channel_list[item_n], video_link))
-                    print('[%d/%d] Successfully collected link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    video_links.append((item_n, video_link))
+                    print('[%d/%d] Successfully collected link for %s' % (item_no, len(page_links), item_n), file=sys.stderr)
                 else:
                     video_link = ''
                     sleep(1.5)
@@ -96,10 +87,10 @@ if __name__ == '__main__':
                     raise Exception()
                 break
             except:
-                print('[%d] Retry link for %s' % (retry, channel_list[item_n]), file=sys.stderr)
+                print('[%d] Retry link for %s' % (retry, item_n), file=sys.stderr)
                 retry += 1
                 if retry > MAX_RETRIES:
-                    print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    print('[%d/%d] Failed to collect link for %s' % (item_no, len(page_links), item_n), file=sys.stderr)
                     break
 
     print('Generating ustvgo.m3u8 playlist...', file=sys.stderr)
