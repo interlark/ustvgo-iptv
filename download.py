@@ -20,6 +20,8 @@ if __name__ == '__main__':
     ff_options = FirefoxOptions()
     ff_options.add_argument('--headless')
 
+    print('Downloading the playlist, please wait...')
+
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)
     firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
@@ -78,7 +80,7 @@ if __name__ == '__main__':
                     break
 
                 try:
-                    playlist = driver.wait_for_request('/playlist.m3u8?wmsAuthSign', timeout=TIMEOUT)
+                    playlist = driver.wait_for_request('/playlist.m3u8', timeout=TIMEOUT)
                 except TimeoutException:
                     playlist = None
                 

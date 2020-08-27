@@ -20,6 +20,8 @@ if __name__ == '__main__':
         print('playlist ustvgo.m3u8 not found', file=sys.stderr)
         exit(1)
 
+    print('Updating authentication key, please wait...')
+
     ff_options = FirefoxOptions()
     ff_options.add_argument('--headless')
 
@@ -64,7 +66,7 @@ if __name__ == '__main__':
                     break
                 
                 try:
-                    playlist = driver.wait_for_request('/playlist.m3u8?wmsAuthSign', timeout=TIMEOUT)
+                    playlist = driver.wait_for_request('/playlist.m3u8', timeout=TIMEOUT)
                 except TimeoutException:
                     playlist = None
 
