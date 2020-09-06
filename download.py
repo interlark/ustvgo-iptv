@@ -15,6 +15,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 PROXY = None  # 'host:port' or None
 TIMEOUT = 10
 MAX_RETRIES = 3
+IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
 
 if __name__ == '__main__':
     ff_options = FirefoxOptions()
@@ -69,15 +70,30 @@ if __name__ == '__main__':
             try:
                 driver.get(link)
 
+                # Get iframe
+                iframe = None
                 try:
-                    driver.find_element_by_xpath("//h5[text()='This channel requires our VPN to watch!']")
+                    iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
+                except NoSuchElementException:
+                    print('[%d/%d] Video frame is not found for channel %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    break
+
+                # Detect VPN-required channels
+                try:
+                    driver.switch_to.frame(iframe)
+                    driver.find_element_by_xpath("//*[text()='This channel requires our VPN to watch!']")
                     need_vpn = True
                 except NoSuchElementException:
                     need_vpn = False
+                finally:
+                    driver.switch_to.default_content()
 
                 if need_vpn:
                     print('[%d/%d] Channel %s needs VPN to be grabbed, skipping' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                     break
+
+                # Autoplay
+                iframe.click()
 
                 try:
                     playlist = driver.wait_for_request('/playlist.m3u8', timeout=TIMEOUT)

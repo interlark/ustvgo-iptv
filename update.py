@@ -7,13 +7,14 @@ from time import sleep
 
 from bs4 import BeautifulSoup
 from seleniumwire import webdriver
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 TIMEOUT = 10
+IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
 
 if __name__ == '__main__':
     if not os.path.isfile('ustvgo.m3u8'):
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     firefox_profile.set_preference('dom.disable_beforeunload', True)
     firefox_profile.set_preference('browser.tabs.warnOnClose', False)
     firefox_profile.set_preference('media.volume_scale', '0.0')
-    
+
     driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
     sleep(0.5)
@@ -55,15 +56,29 @@ if __name__ == '__main__':
         while True:
             try:
                 driver.get(link)
-
+                
+                # Get iframe
+                iframe = None
                 try:
-                    driver.find_element_by_xpath("//h5[text()='This channel requires our VPN to watch!']")
+                    iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
+                except NoSuchElementException:
+                    break
+
+                # Detect VPN-required channels
+                try:
+                    driver.switch_to.frame(iframe)
+                    driver.find_element_by_xpath("//*[text()='This channel requires our VPN to watch!']")
                     need_vpn = True
                 except NoSuchElementException:
                     need_vpn = False
-
+                finally:
+                    driver.switch_to.default_content()
+                
                 if need_vpn:
                     break
+                
+                # Autoplay
+                iframe.click()
                 
                 try:
                     playlist = driver.wait_for_request('/playlist.m3u8', timeout=TIMEOUT)
@@ -80,14 +95,14 @@ if __name__ == '__main__':
                 else:
                     raise Exception()
 
-            except:
+            except Exception as e:
                 print('Failed to get key, retry(%d) ...' % retry, file=sys.stderr)
                 retry += 1
                 if retry > MAX_RETRIES:
                     break
 
     if not captured_key:
-        print('Exiting...', file=sys.stderr)
+        print('No key found. Exiting...', file=sys.stderr)
         exit(1)
 
     print('Updating ustvgo.m3u8 playlist...', file=sys.stderr)
