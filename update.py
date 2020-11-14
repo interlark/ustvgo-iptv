@@ -12,11 +12,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from argparse import ArgumentParser
 
-TIMEOUT = 10
 IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
 
 if __name__ == '__main__':
+    args_parser = ArgumentParser()
+    args_parser.add_argument('-n', '--no-headless', action='store_true', help='Run script in no-headless mode (debug)')
+    args_parser.add_argument('-t', '--timeout', type=int, default=10, help='Maximum number of seconds to wait for the response')
+    args_parser.add_argument('-m', '--max-retries', type=int, default=3, help='Maximum number of attempts to collect data')
+    args = args_parser.parse_args()
+
+    if args.max_retries <= 0 or args.timeout <= 0:
+        print('Invalid arguments', file=sys.stderr)
+        exit(1)
+
     if not os.path.isfile('ustvgo.m3u8'):
         print('playlist ustvgo.m3u8 not found', file=sys.stderr)
         exit(1)
@@ -24,7 +34,8 @@ if __name__ == '__main__':
     print('Updating authentication key, please wait...')
 
     ff_options = FirefoxOptions()
-    ff_options.add_argument('--headless')
+    if not args.no_headless:
+        ff_options.add_argument('--headless')
 
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference('permissions.default.image', 2)
@@ -36,8 +47,6 @@ if __name__ == '__main__':
     driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
     driver.get('https://ustvgo.tv/')
     sleep(0.5)
-
-    MAX_RETRIES = 3
 
     soup = BeautifulSoup(driver.page_source, features='lxml')
     root_div = soup.select_one('div.article-container')
@@ -67,7 +76,7 @@ if __name__ == '__main__':
                 # Detect VPN-required channels
                 try:
                     driver.switch_to.frame(iframe)
-                    driver.find_element_by_xpath("//*[text()='This channel requires our VPN to watch!']")
+                    driver.find_element_by_xpath("//*[text()='Please use our VPN to watch this channel!']")
                     need_vpn = True
                 except NoSuchElementException:
                     need_vpn = False
@@ -81,7 +90,7 @@ if __name__ == '__main__':
                 iframe.click()
                 
                 try:
-                    playlist = driver.wait_for_request('/playlist.m3u8', timeout=TIMEOUT)
+                    playlist = driver.wait_for_request('/playlist.m3u8', timeout=args.timeout)
                 except TimeoutException:
                     playlist = None
 
@@ -95,10 +104,12 @@ if __name__ == '__main__':
                 else:
                     raise Exception()
 
+            except KeyboardInterrupt:
+                exit(1)
             except Exception as e:
                 print('Failed to get key, retry(%d) ...' % retry, file=sys.stderr)
                 retry += 1
-                if retry > MAX_RETRIES:
+                if retry > args.max_retries:
                     break
 
     if not captured_key:

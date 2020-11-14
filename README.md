@@ -51,3 +51,22 @@ Updating ustvgo.m3u8 playlist...
 ```bash
 vlc ustvgo.m3u8 --adaptive-use-access
 ```
+
+## Troubleshooting
+* If you run script on dedicated headless server and bump into erros like `Failed to collect link` - seems like you don't have `AVC codecs` installed on your server, try install them with
+```bash
+sudo apt-get install ubuntu-restricted-extras
+```
+if you have ubuntu server installed or commonly
+```bash
+sudo apt-get install libavcodec58 libav-tools
+```
+* If you get errors and now guessing what's going wrong, try to run script with `--no-headless` argument to see what's going on in the browser
+```bash
+python3 download.py --no-headless
+```
+or 
+
+```bash
+python3 update.py --no-headless
+```
