@@ -37,7 +37,7 @@ python3 download.py
 
 * Use [update.py](update.py) to update authentication key:
 
-> Every key valid for 4 hours
+> Every key is valid for 4 hours
 ```bash
 python3 update.py
 ```
