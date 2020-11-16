@@ -70,3 +70,8 @@ or
 ```bash
 python3 update.py --no-headless
 ```
+
+## Tips
+* In case if you're not a native speaker and use TV, Cartoons, Movies and Shows to `learn the language` - on some channels you can turn on `subtitles` that make it easier pretty much.
+
+![Subtitles screenshot](https://raw.githubusercontent.com/interlark/ustvgo_downloader/master/assets/subtitles-screenshot.png)
