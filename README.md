@@ -2,19 +2,11 @@
 
 ## Installation
 
-Script uses Selenium & Firefox (Gecko driver), so make sure you've installed all of them on your machine:
+Script uses Selenium & Firefox (Gecko driver), so make sure you've installed Firefox browser on your computer, all the rest get installed automatically.
 
 ```bash
-sudo apt install firefox
-wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
-sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.26.0-linux64.tar.gz -O > /usr/bin/geckodriver'
-sudo chmod +x /usr/bin/geckodriver
-rm geckodriver-v0.26.0-linux64.tar.gz
-```
-
-Then,
-
-```bash
+git clone https://github.com/interlark/ustvgo_downloader
+cd ustvgo_downloader
 pip3 install -r requirements.txt
 ```
 
