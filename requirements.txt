@@ -2,3 +2,4 @@ bs4
 lxml
 selenium
 selenium-wire==1.1.0
+requests
