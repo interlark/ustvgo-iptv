@@ -125,6 +125,8 @@ if __name__ == '__main__':
     page_links = []
     for link in root_div.select('li>strong>a[href]'):
         page_links.append(link.get('href'))
+    for link in root_div.select('li>a[href]'):
+        page_links.append(link.get('href'))
 
     channel_list = [
         re.sub(r'^https://ustvgo.tv/|/$', '', i)
