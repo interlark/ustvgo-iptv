@@ -208,7 +208,7 @@ if __name__ == '__main__':
     with open('ustvgo.m3u8', 'w') as file:
         file.write('#EXTM3U\n\n')
         for name, url in video_links:
-            file.write('#EXTINF:-1 tvg-id="' + channel_id_override[name] + '" ' + 'group-title="' + channel_categories + '", ' + name + '\n')
+            file.write('#EXTINF:-1 tvg-id="' + channel_id_override[name] + '" ' + 'group-title="' + channel_categories[name] + '", ' + name + '\n')
             file.write("#EXTVLCOPT:http-user-agent=\"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:71.0) Gecko/20100101 Firefox/71.0\"\n")
             file.write("#EXTVLCOPT:http-referrer=\"https://ustvgo.tv\"\n")
             file.write(url + '\n\n')
