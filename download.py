@@ -5,6 +5,7 @@ import re
 import sys
 import tarfile
 import zipfile
+import json
 from argparse import ArgumentParser
 from time import sleep
 
@@ -18,6 +19,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from seleniumwire import webdriver
 
 IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
+
+# Opening JSON file
+with open('channel_categories.json') as json_file:
+    channel_categories = json.load(json_file)
+with open('channel_id_override.json') as json_file:
+    channel_id_override = json.load(json_file)
 
 def check_gecko_driver():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -201,7 +208,7 @@ if __name__ == '__main__':
     with open('ustvgo.m3u8', 'w') as file:
         file.write('#EXTM3U\n\n')
         for name, url in video_links:
-            file.write('#EXTINF:-1,' + name + '\n')
+            file.write('#EXTINF:-1 tvg-id="' + channel_id_override[name] + '" ' + 'group-title="' + channel_categories + '", ' + name + '\n')
             file.write("#EXTVLCOPT:http-user-agent=\"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:71.0) Gecko/20100101 Firefox/71.0\"\n")
             file.write("#EXTVLCOPT:http-referrer=\"https://ustvgo.tv\"\n")
             file.write(url + '\n\n')
