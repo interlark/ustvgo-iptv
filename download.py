@@ -163,7 +163,7 @@ if __name__ == '__main__':
                 # Detect VPN-required channels
                 try:
                     driver.switch_to.frame(iframe)
-                    driver.find_element_by_xpath("//*[text()='Please use our VPN to watch this channel!']")
+                    driver.find_element_by_xpath("//*[text()='This channel requires a VPN to watch.']")
                     need_vpn = True
                 except NoSuchElementException:
                     need_vpn = False
