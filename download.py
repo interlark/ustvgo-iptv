@@ -5,6 +5,7 @@ import re
 import sys
 import tarfile
 import zipfile
+import json
 from argparse import ArgumentParser
 from time import sleep
 
@@ -16,8 +17,17 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from seleniumwire import webdriver
+from os import path
 
 IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
+
+# Opening JSON file
+if path.exists("channel_categories.json"):
+    with open('channel_categories.json') as json_file:
+        channel_categories = json.load(json_file)
+if path.exists('channel_id_override.json'):
+    with open('channel_id_override.json') as json_file:
+        channel_id_override = json.load(json_file)
 
 def check_gecko_driver():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -125,6 +135,8 @@ if __name__ == '__main__':
     page_links = []
     for link in root_div.select('li>strong>a[href]'):
         page_links.append(link.get('href'))
+    for link in root_div.select('li>a[href]'):
+        page_links.append(link.get('href'))
 
     channel_list = [
         re.sub(r'^https://ustvgo.tv/|/$', '', i)
@@ -154,7 +166,7 @@ if __name__ == '__main__':
                 # Detect VPN-required channels
                 try:
                     driver.switch_to.frame(iframe)
-                    driver.find_element_by_xpath("//*[text()='Please use our VPN to watch this channel!']")
+                    driver.find_element_by_xpath("//*[text()='This channel requires a VPN to watch.']")
                     need_vpn = True
                 except NoSuchElementException:
                     need_vpn = False
@@ -199,7 +211,15 @@ if __name__ == '__main__':
     with open('ustvgo.m3u8', 'w') as file:
         file.write('#EXTM3U\n\n')
         for name, url in video_links:
-            file.write('#EXTINF:-1,' + name + '\n')
+            if path.exists("channel_id_override.json"):
+                tvg_id = (channel_id_override.get(name, name))
+            else:
+                tvg_id = name
+            if path.exists("channel_categories.json"):
+                group_title = (channel_categories.get(name, "Uncategorized"))
+            else:
+                group_title = "Uncategorized"
+            file.write('#EXTINF:-1 tvg-id="%s" group-title="%s", %s \n' % (tvg_id, group_title, name))
             file.write("#EXTVLCOPT:http-user-agent=\"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:71.0) Gecko/20100101 Firefox/71.0\"\n")
             file.write("#EXTVLCOPT:http-referrer=\"https://ustvgo.tv\"\n")
             file.write(url + '\n\n')
