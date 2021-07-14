@@ -2,7 +2,7 @@
 
 ## Installation
 
-Script uses Selenium & Firefox (Gecko driver), so make sure you've installed Firefox browser on your computer, all the rest get installed automatically.
+Script uses **Selenium & Firefox (Gecko driver)**, so make sure you've installed **Firefox browser** on your computer, all the rest get installed automatically.
 
 ```bash
 git clone https://github.com/interlark/ustvgo_downloader
