@@ -206,8 +206,7 @@ if __name__ == '__main__':
                 break
             except KeyboardInterrupt:
                 exit(1)
-            except e:
-                print(e)
+            except:
                 print('[%d] Retry link for %s' % (retry, channel_list[item_n]), file=sys.stderr)
                 retry += 1
                 if retry > args.max_retries:
