@@ -12,7 +12,7 @@ pip3 install -r requirements.txt
 
 ## Usage
 
-* Use [download.py](download.py) to **download** playlist [ustvgo.m3u8](ustvgo.m3u8) from [ustvgo.tv](http://ustvgo.tv/) if you need it:
+1. Use [download.py](download.py) to **download** playlist [ustvgo.m3u8](ustvgo.m3u8) from [ustvgo.tv](http://ustvgo.tv/) if you need it:
 > It's not required, since you can use the already [existing](ustvgo.m3u8) playlist
 
 ```bash
@@ -27,7 +27,7 @@ python3 download.py
 ...
 ```
 
-* Use [update.py](update.py) to **update** authentication key:
+2. Use [update.py](update.py) to **update** authentication key:
 
 > Every key is valid for 4 hours
 ```bash
@@ -39,7 +39,7 @@ Recieved key: c2VakmPyX...aW52dRVzoTI1MA==
 Updating ustvgo.m3u8 playlist...
 ```
 
-* **Play** collected playlist:
+3. **Play** collected playlist:
 ```bash
 vlc ustvgo.m3u8 --adaptive-use-access
 ```
