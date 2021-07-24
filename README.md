@@ -13,36 +13,36 @@ pip3 install -r requirements.txt
 ## Usage
 
 1. Use [download.py](download.py) to **download** playlist [ustvgo.m3u8](ustvgo.m3u8) from [ustvgo.tv](http://ustvgo.tv/) if you need it:
-> It's not required, since you can use the already [existing](ustvgo.m3u8) playlist
+    > It's not required, since you can use the already [existing](ustvgo.m3u8) playlist, so you can skip this step.
 
-```bash
-python3 download.py
-```
+    ```bash
+    python3 download.py
+    ```
 
-```text 
-[1/81] Successfully collected link for GSN
-[2/81] Successfully collected link for LIFETIME MOVIES
-[3/81] Successfully collected link for ANIMAL PLANET
-[4/81] Successfully collected link for NBC SPORTS
-...
-```
+    ```text 
+    [1/81] Successfully collected link for GSN
+    [2/81] Successfully collected link for LIFETIME MOVIES
+    [3/81] Successfully collected link for ANIMAL PLANET
+    [4/81] Successfully collected link for NBC SPORTS
+    ...
+    ```
 
 2. Use [update.py](update.py) to **update** authentication key:
 
-> Every key is valid for 4 hours
-```bash
-python3 update.py
-```
+    > Every key is valid for 4 hours.
+    ```bash
+    python3 update.py
+    ```
 
-```text
-Recieved key: c2VakmPyX...aW52dRVzoTI1MA==
-Updating ustvgo.m3u8 playlist...
-```
+    ```text
+    Recieved key: c2VakmPyX...aW52dRVzoTI1MA==
+    Updating ustvgo.m3u8 playlist...
+    ```
 
 3. **Play** collected playlist:
-```bash
-vlc ustvgo.m3u8 --adaptive-use-access
-```
+    ```bash
+    vlc ustvgo.m3u8 --adaptive-use-access
+    ```
 
 ## Troubleshooting
 * If you run script on dedicated headless server and bump into erros like **Failed to collect link** - seems like you don't have **AVC codecs** installed on your server, try install them with
