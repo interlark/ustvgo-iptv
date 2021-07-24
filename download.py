@@ -179,7 +179,7 @@ if __name__ == '__main__':
 
                 # close popup if it shows up
                 try:
-                    popupAcceptButton = driver.find_element_by_css_selector(POPUP_ACCEPT_CSS_SELECTOR).click()
+                    driver.find_element_by_css_selector(POPUP_ACCEPT_CSS_SELECTOR).click()
                 except NoSuchElementException:
                     pass
 
