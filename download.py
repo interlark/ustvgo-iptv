@@ -20,7 +20,7 @@ from seleniumwire import webdriver
 from os import path
 
 IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
-POPUP_ACCEPT_CSS_SELECTOR = '#qc-cmp2-ui > div.qc-cmp2-footer.qc-cmp2-footer-overlay.qc-cmp2-footer-scrolled > div > button.sc-ifAKCX.ljEJIv'
+POPUP_ACCEPT_XPATH_SELECTOR = '//button[contains(text(),"AGREE")]'
 # Opening JSON file
 if path.exists("channel_categories.json"):
     with open('channel_categories.json') as json_file:
@@ -179,7 +179,7 @@ if __name__ == '__main__':
 
                 # close popup if it shows up
                 try:
-                    driver.find_element_by_css_selector(POPUP_ACCEPT_CSS_SELECTOR).click()
+                    driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
                 except NoSuchElementException:
                     pass
 
@@ -206,7 +206,8 @@ if __name__ == '__main__':
                 break
             except KeyboardInterrupt:
                 exit(1)
-            except:
+            except e:
+                print(e)
                 print('[%d] Retry link for %s' % (retry, channel_list[item_n]), file=sys.stderr)
                 retry += 1
                 if retry > args.max_retries:
