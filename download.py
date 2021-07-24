@@ -20,7 +20,7 @@ from seleniumwire import webdriver
 from os import path
 
 IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
-
+POPUP_ACCEPT_XPATH_SELECTOR = '//button[contains(text(),"AGREE")]'
 # Opening JSON file
 if path.exists("channel_categories.json"):
     with open('channel_categories.json') as json_file:
@@ -176,6 +176,12 @@ if __name__ == '__main__':
                 if need_vpn:
                     print('[%d/%d] Channel %s needs VPN to be grabbed, skipping' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                     break
+
+                # close popup if it shows up
+                try:
+                    driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
+                except NoSuchElementException:
+                    pass
 
                 # Autoplay
                 iframe.click()
