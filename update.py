@@ -20,7 +20,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from seleniumwire import webdriver
 
 IFRAME_CSS_SELECTOR = '.iframe-container>iframe'
-
+POPUP_ACCEPT_XPATH_SELECTOR = '//button[contains(text(),"AGREE")]'
 def check_gecko_driver():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     bin_dir = os.path.join(script_dir, 'bin') 
@@ -149,6 +149,12 @@ if __name__ == '__main__':
                 
                 if need_vpn:
                     break
+                
+                # close popup if it shows up
+                try:
+                    driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
+                except NoSuchElementException:
+                    pass
                 
                 # Autoplay
                 iframe.click()
