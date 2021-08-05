@@ -39,7 +39,7 @@ pip3 install -r requirements.txt
     Updating ustvgo.m3u8 playlist...
     ```
 
-3. **Play** collected playlist:
+3. **Play** collected/updated playlist:
     ```bash
     vlc ustvgo.m3u8 --adaptive-use-access
     ```
