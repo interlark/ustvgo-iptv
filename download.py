@@ -126,109 +126,106 @@ if __name__ == '__main__':
         }
 
     # pylint: disable=unexpected-keyword-arg
-    driver = webdriver.Firefox(seleniumwire_options=set_seleniumwire_options, options=ff_options, firefox_profile=firefox_profile)
-    driver.get('https://ustvgo.tv/')
-    sleep(0.5)
+    with webdriver.Firefox(seleniumwire_options=set_seleniumwire_options, options=ff_options, firefox_profile=firefox_profile) as driver:
+        driver.get('https://ustvgo.tv/')
+        sleep(0.5)
 
-    soup = BeautifulSoup(driver.page_source, features='lxml')
-    root_div = soup.select_one('div.article-container')
-    page_links = []
-    for link in root_div.select('li>strong>a[href]'):
-        page_links.append(link.get('href'))
-    for link in root_div.select('li>a[href]'):
-        page_links.append(link.get('href'))
+        soup = BeautifulSoup(driver.page_source, features='lxml')
+        root_div = soup.select_one('div.article-container')
+        page_links = []
+        for link in root_div.select('li>strong>a[href]'):
+            page_links.append(link.get('href'))
+        for link in root_div.select('li>a[href]'):
+            page_links.append(link.get('href'))
 
-    channel_list = [
-        re.sub(r'^https://ustvgo.tv/|/$', '', i)
-        .replace('-live', '')
-        .replace('-channel', '')
-        .replace('-free', '')
-        .replace('-streaming', '')
-        .replace('-', ' ')
-        .upper() for i in page_links
-    ]
-    video_links = []
+        channel_list = [
+            re.sub(r'^https://ustvgo.tv/|/$', '', i)
+            .replace('-live', '')
+            .replace('-channel', '')
+            .replace('-free', '')
+            .replace('-streaming', '')
+            .replace('-', ' ')
+            .upper() for i in page_links
+        ]
+        video_links = []
 
-    for item_n, link in enumerate(page_links):
-        retry = 1
-        while True:
-            try:
-                driver.get(link)
-
-                # Get iframe
-                iframe = None
+        for item_n, link in enumerate(page_links):
+            retry = 1
+            while True:
                 try:
-                    iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
-                except NoSuchElementException:
-                    print('[%d/%d] Video frame is not found for channel %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    driver.get(link)
+
+                    # Get iframe
+                    iframe = None
+                    try:
+                        iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
+                    except NoSuchElementException:
+                        print('[%d/%d] Video frame is not found for channel %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                        break
+
+                    # Detect VPN-required channels
+                    try:
+                        driver.switch_to.frame(iframe)
+                        driver.find_element_by_xpath("//*[text()='This channel requires a VPN to watch.']")
+                        need_vpn = True
+                    except NoSuchElementException:
+                        need_vpn = False
+                    finally:
+                        driver.switch_to.default_content()
+
+                    if need_vpn:
+                        print('[%d/%d] Channel %s needs VPN to be grabbed, skipping' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                        break
+
+                    # close popup if it shows up
+                    try:
+                        driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
+                    except NoSuchElementException:
+                        pass
+
+                    # Autoplay
+                    iframe.click()
+
+                    try:
+                        playlist = driver.wait_for_request('/playlist.m3u8', timeout=args.timeout)
+                    except TimeoutException:
+                        playlist = None
+                    
+                    if playlist:
+                        video_link = playlist.path
+                        video_links.append((channel_list[item_n], video_link))
+                        print('[%d/%d] Successfully collected link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                    else:
+                        video_link = ''
+                        sleep(1.5)
+
+                    sleep(3)
+                    del driver.requests
+                    if not video_link:
+                        raise NoSuchElementException()
                     break
+                except KeyboardInterrupt:
+                    exit(1)
+                except:
+                    print('[%d] Retry link for %s' % (retry, channel_list[item_n]), file=sys.stderr)
+                    retry += 1
+                    if retry > args.max_retries:
+                        print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+                        break
 
-                # Detect VPN-required channels
-                try:
-                    driver.switch_to.frame(iframe)
-                    driver.find_element_by_xpath("//*[text()='This channel requires a VPN to watch.']")
-                    need_vpn = True
-                except NoSuchElementException:
-                    need_vpn = False
-                finally:
-                    driver.switch_to.default_content()
-
-                if need_vpn:
-                    print('[%d/%d] Channel %s needs VPN to be grabbed, skipping' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
-                    break
-
-                # close popup if it shows up
-                try:
-                    driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
-                except NoSuchElementException:
-                    pass
-
-                # Autoplay
-                iframe.click()
-
-                try:
-                    playlist = driver.wait_for_request('/playlist.m3u8', timeout=args.timeout)
-                except TimeoutException:
-                    playlist = None
-                
-                if playlist:
-                    video_link = playlist.path
-                    video_links.append((channel_list[item_n], video_link))
-                    print('[%d/%d] Successfully collected link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
+        print('Generating ustvgo.m3u8 playlist...', file=sys.stderr)
+        with open('ustvgo.m3u8', 'w') as file:
+            file.write('#EXTM3U\n\n')
+            for name, url in video_links:
+                if path.exists("channel_id_override.json"):
+                    tvg_id = (channel_id_override.get(name, name))
                 else:
-                    video_link = ''
-                    sleep(1.5)
-
-                sleep(3)
-                del driver.requests
-                if not video_link:
-                    raise NoSuchElementException()
-                break
-            except KeyboardInterrupt:
-                exit(1)
-            except:
-                print('[%d] Retry link for %s' % (retry, channel_list[item_n]), file=sys.stderr)
-                retry += 1
-                if retry > args.max_retries:
-                    print('[%d/%d] Failed to collect link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
-                    break
-
-    print('Generating ustvgo.m3u8 playlist...', file=sys.stderr)
-    with open('ustvgo.m3u8', 'w') as file:
-        file.write('#EXTM3U\n\n')
-        for name, url in video_links:
-            if path.exists("channel_id_override.json"):
-                tvg_id = (channel_id_override.get(name, name))
-            else:
-                tvg_id = name
-            if path.exists("channel_categories.json"):
-                group_title = (channel_categories.get(name, "Uncategorized"))
-            else:
-                group_title = "Uncategorized"
-            file.write('#EXTINF:-1 tvg-id="%s" group-title="%s", %s \n' % (tvg_id, group_title, name))
-            file.write("#EXTVLCOPT:http-user-agent=\"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:71.0) Gecko/20100101 Firefox/71.0\"\n")
-            file.write("#EXTVLCOPT:http-referrer=\"https://ustvgo.tv\"\n")
-            file.write(url + '\n\n')
-
-    driver.close()
-    driver.quit()
+                    tvg_id = name
+                if path.exists("channel_categories.json"):
+                    group_title = (channel_categories.get(name, "Uncategorized"))
+                else:
+                    group_title = "Uncategorized"
+                file.write('#EXTINF:-1 tvg-id="%s" group-title="%s", %s \n' % (tvg_id, group_title, name))
+                file.write("#EXTVLCOPT:http-user-agent=\"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:71.0) Gecko/20100101 Firefox/71.0\"\n")
+                file.write("#EXTVLCOPT:http-referrer=\"https://ustvgo.tv\"\n")
+                file.write(url + '\n\n')

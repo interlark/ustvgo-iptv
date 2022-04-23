@@ -108,91 +108,88 @@ if __name__ == '__main__':
     firefox_profile.set_preference('browser.tabs.warnOnClose', False)
     firefox_profile.set_preference('media.volume_scale', '0.0')
 
-    driver = webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile)
-    driver.get('https://ustvgo.tv/')
-    sleep(0.5)
+    with webdriver.Firefox(options=ff_options, firefox_profile=firefox_profile) as driver:
+        driver.get('https://ustvgo.tv/')
+        sleep(0.5)
 
-    soup = BeautifulSoup(driver.page_source, features='lxml')
-    root_div = soup.select_one('div.article-container')
-    page_links = []
-    for link in root_div.select('li>strong>a[href]'):
-        page_links.append(link.get('href'))
+        soup = BeautifulSoup(driver.page_source, features='lxml')
+        root_div = soup.select_one('div.article-container')
+        page_links = []
+        for link in root_div.select('li>strong>a[href]'):
+            page_links.append(link.get('href'))
 
-    page_links = set(page_links)
-    video_links = []
-    captured_key = None
+        page_links = set(page_links)
+        video_links = []
+        captured_key = None
 
-    for item_n, link in enumerate(page_links):
-        if captured_key:
-            break
-        retry = 1
-        while True:
-            try:
-                driver.get(link)
-                
-                # Get iframe
-                iframe = None
+        for item_n, link in enumerate(page_links):
+            if captured_key:
+                break
+            retry = 1
+            while True:
                 try:
-                    iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
-                except NoSuchElementException:
-                    break
-
-                # Detect VPN-required channels
-                try:
-                    driver.switch_to.frame(iframe)
-                    driver.find_element_by_xpath("//*[text()='Please use our VPN to watch this channel!']")
-                    need_vpn = True
-                except NoSuchElementException:
-                    need_vpn = False
-                finally:
-                    driver.switch_to.default_content()
-                
-                if need_vpn:
-                    break
-                
-                # close popup if it shows up
-                try:
-                    driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
-                except NoSuchElementException:
-                    pass
-                
-                # Autoplay
-                iframe.click()
-                
-                try:
-                    playlist = driver.wait_for_request('/playlist.m3u8', timeout=args.timeout)
-                except TimeoutException:
-                    playlist = None
-
-                if playlist:
-                    video_link = playlist.path
-                    m_key = re.search('(?<=wmsAuthSign=).*$',video_link)
-                    if m_key:
-                        captured_key = m_key.group()
-                        print('Recieved key: %s' % captured_key, file=sys.stderr)
+                    driver.get(link)
+                    
+                    # Get iframe
+                    iframe = None
+                    try:
+                        iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
+                    except NoSuchElementException:
                         break
-                else:
-                    raise Exception()
 
-            except KeyboardInterrupt:
-                exit(1)
-            except Exception as e:
-                print('Failed to get key, retry(%d) ...' % retry, file=sys.stderr)
-                retry += 1
-                if retry > args.max_retries:
-                    break
+                    # Detect VPN-required channels
+                    try:
+                        driver.switch_to.frame(iframe)
+                        driver.find_element_by_xpath("//*[text()='Please use our VPN to watch this channel!']")
+                        need_vpn = True
+                    except NoSuchElementException:
+                        need_vpn = False
+                    finally:
+                        driver.switch_to.default_content()
+                    
+                    if need_vpn:
+                        break
+                    
+                    # close popup if it shows up
+                    try:
+                        driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
+                    except NoSuchElementException:
+                        pass
+                    
+                    # Autoplay
+                    iframe.click()
+                    
+                    try:
+                        playlist = driver.wait_for_request('/playlist.m3u8', timeout=args.timeout)
+                    except TimeoutException:
+                        playlist = None
 
-    if not captured_key:
-        print('No key found. Exiting...', file=sys.stderr)
-        exit(1)
+                    if playlist:
+                        video_link = playlist.path
+                        m_key = re.search('(?<=wmsAuthSign=).*$',video_link)
+                        if m_key:
+                            captured_key = m_key.group()
+                            print('Recieved key: %s' % captured_key, file=sys.stderr)
+                            break
+                    else:
+                        raise Exception()
 
-    print('Updating ustvgo.m3u8 playlist...', file=sys.stderr)
+                except KeyboardInterrupt:
+                    exit(1)
+                except Exception as e:
+                    print('Failed to get key, retry(%d) ...' % retry, file=sys.stderr)
+                    retry += 1
+                    if retry > args.max_retries:
+                        break
 
-    playlist_text = open('ustvgo.m3u8', 'r').read()
-    playlist_text = re.sub('(?<=wmsAuthSign=).*(?=\n)', captured_key, playlist_text)
+        if not captured_key:
+            print('No key found. Exiting...', file=sys.stderr)
+            exit(1)
 
-    with open('ustvgo.m3u8', 'w') as file:
-        file.write(playlist_text)
+        print('Updating ustvgo.m3u8 playlist...', file=sys.stderr)
 
-    driver.close()
-    driver.quit()
+        playlist_text = open('ustvgo.m3u8', 'r').read()
+        playlist_text = re.sub('(?<=wmsAuthSign=).*(?=\n)', captured_key, playlist_text)
+
+        with open('ustvgo.m3u8', 'w') as file:
+            file.write(playlist_text)
