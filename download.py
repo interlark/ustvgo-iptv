@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+from operator import contains
+from optparse import Option
 import os
 import re
+from ssl import Options
 import sys
 import tarfile
 import zipfile
@@ -13,7 +16,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from seleniumwire import webdriver
@@ -35,19 +38,19 @@ def check_gecko_driver():
 
     if sys.platform.startswith('linux'):
         platform = 'linux'
-        url = 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz'
+        url = 'https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux32.tar.gz'
         local_platform_path = os.path.join(bin_dir, platform)
         local_driver_path = os.path.join(local_platform_path, 'geckodriver')
         var_separator = ':'
     elif sys.platform == 'darwin':
         platform = 'mac'
-        url = 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-macos.tar.gz'
+        url = 'https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-macos.tar.gz'
         local_platform_path = os.path.join(bin_dir, platform)
         local_driver_path = os.path.join(local_platform_path, 'geckodriver')
         var_separator = ':'
     elif sys.platform.startswith('win'):
         platform = 'win'
-        url = 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-win64.zip'
+        url = 'https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-win64.zip'
         local_platform_path = os.path.join(bin_dir, platform)
         local_driver_path = os.path.join(local_platform_path, 'geckodriver.exe')
         var_separator = ';'
@@ -100,13 +103,12 @@ if __name__ == '__main__':
 
     check_gecko_driver()
 
-    ff_options = FirefoxOptions()
+    ff_options = Options()
     if not args.no_headless:
         ff_options.add_argument('--headless')
 
     print('Downloading the playlist, please wait...', file=sys.stderr)
-
-    firefox_profile = webdriver.FirefoxProfile()
+    firefox_profile = ff_options
     firefox_profile.set_preference('permissions.default.image', 2)
     firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
     firefox_profile.set_preference('dom.disable_beforeunload', True)
@@ -126,7 +128,7 @@ if __name__ == '__main__':
         }
 
     # pylint: disable=unexpected-keyword-arg
-    with webdriver.Firefox(seleniumwire_options=set_seleniumwire_options, options=ff_options, firefox_profile=firefox_profile) as driver:
+    with webdriver.Firefox(seleniumwire_options=set_seleniumwire_options, options=ff_options, firefox_profile=firefox_profile.profile) as driver:
         driver.get('https://ustvgo.tv/')
         sleep(0.5)
 
@@ -158,7 +160,7 @@ if __name__ == '__main__':
                     # Get iframe
                     iframe = None
                     try:
-                        iframe = driver.find_element_by_css_selector(IFRAME_CSS_SELECTOR)
+                        iframe = driver.find_element(by=By.CSS_SELECTOR, value=IFRAME_CSS_SELECTOR)
                     except NoSuchElementException:
                         print('[%d/%d] Video frame is not found for channel %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                         break
@@ -166,7 +168,7 @@ if __name__ == '__main__':
                     # Detect VPN-required channels
                     try:
                         driver.switch_to.frame(iframe)
-                        driver.find_element_by_xpath("//*[text()='This channel requires a VPN to watch.']")
+                        driver.find_element(by=By.XPATH, value="//*[text()='Please use the VPN in the link above to access this channel.']")
                         need_vpn = True
                     except NoSuchElementException:
                         need_vpn = False
@@ -179,7 +181,7 @@ if __name__ == '__main__':
 
                     # close popup if it shows up
                     try:
-                        driver.find_element_by_xpath(POPUP_ACCEPT_XPATH_SELECTOR).click()
+                        driver.find_element(by=By.XPATH, value=POPUP_ACCEPT_XPATH_SELECTOR).click()
                     except NoSuchElementException:
                         pass
 
@@ -187,12 +189,20 @@ if __name__ == '__main__':
                     iframe.click()
 
                     try:
-                        playlist = driver.wait_for_request('/playlist.m3u8', timeout=args.timeout)
+                        driver.switch_to.frame(iframe)
+                        scriptList = driver.find_elements(By.XPATH, "//body/script")
+                        for script in scriptList:
+                            innerText = script.get_attribute("innerHTML")
+                            if "hls_src" in innerText:
+                                playlist = innerText
+                                temp = re.search(r"https:[^']*", playlist)
+                                playlist = temp.group(0)
+                                driver.switch_to.default_content()
                     except TimeoutException:
                         playlist = None
                     
                     if playlist:
-                        video_link = playlist.path
+                        video_link = playlist
                         video_links.append((channel_list[item_n], video_link))
                         print('[%d/%d] Successfully collected link for %s' % (item_n + 1, len(page_links), channel_list[item_n]), file=sys.stderr)
                     else:
