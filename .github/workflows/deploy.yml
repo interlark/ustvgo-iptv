@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy:
+    name: Deploy
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Get the version
+      id: get_version
+      run: |
+        echo ::set-output name=version::$(cat ustvgo_iptv.py \
+        | grep  "^VERSION = '\([0-9.]\+\)'" | grep -o "[0-9.]\+")
+      shell: bash
+
+    - name: Get the tag
+      id: get_tag
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+      shell: bash
+
+    - name: Version check
+      if: ${{ steps.get_version.outputs.version }} != ${{ steps.get_tag.outputs.tag }}
+      uses: actions/github-script@v3
+      with:
+        script: |
+            core.setFailed('tag and version are not equivalent!')
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install setuptools twine
+        python -m pip install -e .[dev]
+
+    - name: Build and publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python setup.py sdist bdist_wheel
+        twine upload dist/*
