@@ -317,7 +317,7 @@ def args_parser():
     )
     parser.add_argument(
         '--tvguide-base-url', metavar='URL',
-        default='https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide',
+        default='https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master',
         help='Base TVGuide URL'
     )
     parser.add_argument(

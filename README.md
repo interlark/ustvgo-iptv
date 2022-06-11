@@ -7,7 +7,7 @@
 </div>
 
 <div align="center">
-    <a href="https://github.com/interlark/ustvgo-iptv/actions/workflows/tvguide.yml"><img alt="TV Guide status" src="https://github.com/interlark/ustvgo-iptv/actions/workflows/tvguide.yml/badge.svg"/></a>
+    <a href="https://github.com/interlark/ustvgo-tvguide/actions/workflows/tvguide.yml"><img alt="TV Guide status" src="https://github.com/interlark/ustvgo-tvguide/actions/workflows/tvguide.yml/badge.svg"/></a>
     <a href="https://pypi.org/project/ustvgo-iptv"><img alt="PyPi version" src="https://badgen.net/pypi/v/ustvgo-iptv"/></a>
     <a href="https://pypi.org/project/ustvgo-iptv"><img alt="Supported platforms" src="https://badgen.net/badge/platform/Linux,macOS,Windows?list=|"/></a>
 </div><br>
@@ -20,9 +20,9 @@ It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **genera
 ## Features
 - 🔑 Auto auth-key rotation
   > As server proxies the traffic it can detect if your auth key is expired and refresh it on the fly.
-- 📺 Available [TV Guide](https://github.com/interlark/ustvgo-iptv/tree/tvguide)
-  > `tvguide` branch generates EPG XML for upcoming programs for all the channels twice an hour.
-- [![](https://user-images.githubusercontent.com/20641837/173175879-aed31bd4-b188-4681-89df-5ffc3ea05a82.svg)](https://github.com/interlark/ustvgo-iptv/tree/tvguide/images/icons/channels)
+- 📺 Available [TV Guide](https://github.com/interlark/ustvgo-tvguide)
+  > [TV Guide](https://github.com/interlark/ustvgo-tvguide) repo generates EPG XML for upcoming programs for all the channels twice an hour.
+- [![](https://user-images.githubusercontent.com/20641837/173175879-aed31bd4-b188-4681-89df-5ffc3ea05a82.svg)](https://github.com/interlark/ustvgo-tvguide/tree/master/images/icons/channels)
 Two iconsets for IPTV players with light and dark backgrounds
   > There are 2 channel iconsets adapted for apps with light and dark UI themes.
 - 🗔 Cross-platform GUI
@@ -91,8 +91,8 @@ Two iconsets for IPTV players with light and dark backgrounds
 To play and enjoy your free IPTV you need 2 URLs:
 1) Your generated **master playlist**: 🔗 http://127.0.0.1:6363/ustvgo.m3u8
 2) **TV Guide** (content updates twice an hour):
-    * 🔗 [XML EPG for IPTV players with light UI theme](https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-light-bg.xml)
-    * 🔗 [XML EPG for IPTV players with dark UI theme](https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-dark-bg.xml)
+    * 🔗 [XML EPG for IPTV players with light UI theme](https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-light-bg.xml)
+    * 🔗 [XML EPG for IPTV players with dark UI theme](https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml)
 
 ## Players
   Here is a **list** of popular IPTV players.
@@ -159,7 +159,7 @@ To play and enjoy your free IPTV you need 2 URLs:
     - **Play**
       ```
       1) Settings -> Dashboard -> Live TV -> Tuner Devices -> Add -> M3U Tuner -> URL -> http://127.0.0.1:6363/ustvgo.m3u8
-      2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-dark-bg.xml
+      2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml
       ```
     - **Note**
       ```
@@ -177,7 +177,7 @@ To play and enjoy your free IPTV you need 2 URLs:
     - **Play**
       ```
       1) Add via URL -> http://127.0.0.1:6363/ustvgo.m3u8
-      2) Settings -> EPG Url -> https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-light-bg.xml.gz
+      2) Settings -> EPG Url -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-light-bg.xml.gz
       ```
 
 ## Support
