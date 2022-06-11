@@ -27,7 +27,7 @@ jobs:
       shell: bash
 
     - name: Version check
-      if: v${{ steps.get_version.outputs.version }} != ${{ steps.get_tag.outputs.tag }}
+      if: ${{ format('v{0}', steps.get_version.outputs.version) != steps.get_tag.outputs.tag }}
       uses: actions/github-script@v3
       with:
         script: |
