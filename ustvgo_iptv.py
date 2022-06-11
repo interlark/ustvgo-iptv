@@ -25,7 +25,7 @@ from tqdm.asyncio import tqdm
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
 
 
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
