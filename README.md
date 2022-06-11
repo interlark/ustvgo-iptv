@@ -1,13 +1,13 @@
 <div align="center">
     <h1>
         <a href="#">
-            <img alt="USTVGO-IPTV Logo" width="50%" src="https://user-images.githubusercontent.com/20641837/172721800-8febe428-280b-439c-af88-3da2627f64e9.svg"/>
+            <img alt="USTVGO-IPTV Logo" width="50%" src="https://user-images.githubusercontent.com/20641837/173175835-4161afe3-ae49-48bb-b937-cecb600bc49d.svg"/>
         </a>
     </h1>
 </div>
 
 <div align="center">
-    <a href="https://github.com/interlark/test_repo3/actions/workflows/tvguide.yml"><img alt="TV Guide status" src="https://github.com/interlark/test_repo3/actions/workflows/tvguide.yml/badge.svg"/></a>
+    <a href="https://github.com/interlark/ustvgo-iptv/actions/workflows/tvguide.yml"><img alt="TV Guide status" src="https://github.com/interlark/ustvgo-iptv/actions/workflows/tvguide.yml/badge.svg"/></a>
     <a href="https://pypi.org/project/ustvgo-iptv"><img alt="PyPi version" src="https://badgen.net/pypi/v/ustvgo-iptv"/></a>
     <a href="https://pypi.org/project/ustvgo-iptv"><img alt="Supported platforms" src="https://badgen.net/badge/platform/Linux,macOS,Windows?list=|"/></a>
 </div><br>
@@ -22,7 +22,7 @@ It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **genera
   > As server proxies the traffic it can detect if your auth key is expired and refresh it on the fly.
 - 📺 Available [TV Guide](https://github.com/interlark/ustvgo-iptv/tree/tvguide)
   > `tvguide` branch generates EPG XML for upcoming programs for all the channels twice an hour.
-- [![](https://user-images.githubusercontent.com/20641837/172720671-e1995eed-85c1-403e-acdf-b90cabeb990c.svg)](https://github.com/interlark/ustvgo-iptv/tree/tvguide/images/icons/channels)
+- [![](https://user-images.githubusercontent.com/20641837/173175879-aed31bd4-b188-4681-89df-5ffc3ea05a82.svg)](https://github.com/interlark/ustvgo-iptv/tree/tvguide/images/icons/channels)
 Two iconsets for IPTV players with light and dark backgrounds
   > There are 2 channel iconsets adapted for apps with light and dark UI themes.
 - 🗔 Cross-platform GUI
@@ -47,7 +47,7 @@ Two iconsets for IPTV players with light and dark backgrounds
   ustvgo-iptv
   ```
 
-  <img alt="USTVGO-IPTV CLI screencast" width="666" src="https://user-images.githubusercontent.com/20641837/172928789-ea3e3d84-3b1b-41dd-8d99-37825ca501bb.gif"/>
+  <img alt="USTVGO-IPTV CLI screencast" width="666" src="https://user-images.githubusercontent.com/20641837/173175914-4ba98af7-20eb-4373-88a9-0fc0757b7f58.gif"/>
 
 
 - **Iconset**
@@ -80,7 +80,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 
 - **GUI**
 
-  <img alt="USTVGO-IPTV GUI screenshot" src="https://user-images.githubusercontent.com/20641837/173133709-dcaa943f-1147-4b59-8c3e-a282f0e789a4.png"/>
+  <img alt="USTVGO-IPTV GUI screenshot" src="https://user-images.githubusercontent.com/20641837/173175939-f83b872c-b221-4077-b2ab-554c5766cadc.png"/>
 
   With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with config file on following path:
     * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
@@ -116,8 +116,8 @@ To play and enjoy your free IPTV you need 2 URLs:
         ```
   - **[Jellyfin Media Player](https://github.com/jellyfin/jellyfin-media-player)**
     
-    <img alt="Jellyfin Media Player screenshot" width="49%" src="https://user-images.githubusercontent.com/20641837/173064009-655ddba8-0977-40cb-9953-2741c935db58.jpg"/>
-    <img alt="Jellyfin Media Player screenshot" width="49%" src="https://user-images.githubusercontent.com/20641837/173064070-0d777d2c-04e9-4a01-9e8b-3b770f2ef8b1.jpg"/>
+    <img alt="Jellyfin Media Player screenshot" width="49%" src="https://user-images.githubusercontent.com/20641837/173175969-cbfe5adc-1dc8-4e3b-946c-fa4e295d8b8c.jpg"/>
+    <img alt="Jellyfin Media Player screenshot" width="49%" src="https://user-images.githubusercontent.com/20641837/173175973-8acb076c-e1ac-4d06-96a8-b10a72b2f7d7.jpg"/>
 
     Comfortable, handy, extensible with smooth UI player. **Supports TV Guide**, has **mpv** as a backend.
     
@@ -168,7 +168,7 @@ To play and enjoy your free IPTV you need 2 URLs:
   
   - **[IPTVnator](https://github.com/4gray/iptvnator)**
   
-    <img alt="IPTVnator screenshot" width="666" src="https://user-images.githubusercontent.com/20641837/173046785-4abd2b6a-5f17-4d9b-befb-f53c9fe55d76.jpg"/>
+    <img alt="IPTVnator screenshot" width="666" src="https://user-images.githubusercontent.com/20641837/173176009-a2e86f74-46ef-464a-bbdf-9137f1d48201.jpg"/>
 
     Player built with [Electron](https://github.com/electron/electron) so you can run it even in browser, has light and dark themes.
     
