@@ -17,6 +17,9 @@ from aiohttp import web
 from furl import furl
 from tqdm.asyncio import tqdm
 
+# Fix for https://github.com/pyinstaller/pyinstaller/issues/1113
+''.encode('idna')
+
 # Usage:
 # ./ustvgo_iptv.py
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
@@ -37,7 +40,10 @@ logger = logging.getLogger(__name__)
 
 def root_dir():
     """Root directory."""
-    return pathlib.Path(__file__).parent
+    if hasattr(sys, '_MEIPASS'):
+        return pathlib.Path(sys._MEIPASS)
+    else:
+        return pathlib.Path(__file__).parent
 
 
 def load_dict(filename):
@@ -329,10 +335,10 @@ def args_parser():
 
 def main():
     """Entry point."""
-    parser = args_parser()
-    args = parser.parse_args()
+    # Invoke GUI's entry point
+    from gui import main as main_gui
 
-    asyncio.run(playlist_server(**vars(args)))
+    main_gui()
 
 
 if __name__ == '__main__':
