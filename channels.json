@@ -1,0 +1,802 @@
+[
+    {
+        "id": 1,
+        "stream_id": "ABC",
+        "tvguide_id": "9233011874",
+        "name": "ABC",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 2,
+        "stream_id": "ABCNY",
+        "tvguide_id": "9200000057",
+        "name": "ABC 7 New York",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 3,
+        "stream_id": "ACCN",
+        "tvguide_id": "9200017734",
+        "name": "ACC Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 4,
+        "stream_id": "AE",
+        "tvguide_id": "9200004889",
+        "name": "A&E Network",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 5,
+        "stream_id": "AMC",
+        "tvguide_id": "9200020107",
+        "name": "AMC",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 6,
+        "stream_id": "Animal",
+        "tvguide_id": "9233013462",
+        "name": "Animal Planet",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 7,
+        "stream_id": "BBCAmerica",
+        "tvguide_id": "9200009303",
+        "name": "BBC America",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 8,
+        "stream_id": "BTN",
+        "tvguide_id": "9200004533",
+        "name": "Big Ten Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 9,
+        "stream_id": "BET",
+        "tvguide_id": "9233000226",
+        "name": "BET",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 10,
+        "stream_id": "Boomerang",
+        "tvguide_id": "9233015844",
+        "name": "Boomerang",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 11,
+        "stream_id": "Bravo",
+        "tvguide_id": "9200020094",
+        "name": "Bravo",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 12,
+        "stream_id": "CSPAN",
+        "tvguide_id": "9233007144",
+        "name": "C-SPAN",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 13,
+        "stream_id": "CBS",
+        "tvguide_id": "9200018514",
+        "name": "CBS",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 14,
+        "stream_id": "CBSNY",
+        "tvguide_id": "9200017850",
+        "name": "CBS 2 New York",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 15,
+        "stream_id": "CBSSN",
+        "tvguide_id": "9233015468",
+        "name": "CBS Sports Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 16,
+        "stream_id": "Cinemax",
+        "tvguide_id": "9200000143",
+        "name": "Cinemax",
+        "category": "Premium",
+        "language": "en"
+    },
+    {
+        "id": 17,
+        "stream_id": "CMT",
+        "tvguide_id": "9233000169",
+        "name": "CMT",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 18,
+        "stream_id": "CN",
+        "tvguide_id": "9233001926",
+        "name": "Cartoon Network",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 19,
+        "stream_id": "CNBC",
+        "tvguide_id": "9200009145",
+        "name": "CNBC",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 20,
+        "stream_id": "CNN",
+        "tvguide_id": "9233008130",
+        "name": "CNN",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 21,
+        "stream_id": "Comedy",
+        "tvguide_id": "9233009509",
+        "name": "Comedy Central",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 22,
+        "stream_id": "CW",
+        "tvguide_id": "9233011398",
+        "name": "CW",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 23,
+        "stream_id": "CWNY",
+        "tvguide_id": "9233011398",
+        "name": "CW 11 New York",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 24,
+        "stream_id": "DA",
+        "tvguide_id": "9200014472",
+        "name": "Destination America",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 25,
+        "stream_id": "Discovery",
+        "tvguide_id": "9233001914",
+        "name": "Discovery",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 26,
+        "stream_id": "Disney",
+        "tvguide_id": "9200011893",
+        "name": "Disney",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 27,
+        "stream_id": "DisneyJr",
+        "tvguide_id": "9200016560",
+        "name": "Disney Junior",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 28,
+        "stream_id": "DisneyXD",
+        "tvguide_id": "9200004852",
+        "name": "Disney XD",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 29,
+        "stream_id": "DIY",
+        "tvguide_id": "9200000664",
+        "name": "Magnolia Network (DIY)",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 30,
+        "stream_id": "E",
+        "tvguide_id": "9233003794",
+        "name": "E!",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 31,
+        "stream_id": "ESPN",
+        "tvguide_id": "9233007996",
+        "name": "ESPN",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 32,
+        "stream_id": "ESPN2",
+        "tvguide_id": "9200016131",
+        "name": "ESPN2",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 33,
+        "stream_id": "ESPNU",
+        "tvguide_id": "9233011350",
+        "name": "ESPNU",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 34,
+        "stream_id": "ESPNews",
+        "tvguide_id": "9200006523",
+        "name": "ESPNews",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 35,
+        "stream_id": "FoodNetwork",
+        "tvguide_id": "9233005598",
+        "name": "Food Network",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 36,
+        "stream_id": "FOX",
+        "tvguide_id": "9233002271",
+        "name": "FOX",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 37,
+        "stream_id": "FOXNY",
+        "tvguide_id": "9233003497",
+        "name": "FOX 5 New York",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 38,
+        "stream_id": "FoxBusiness",
+        "tvguide_id": "9200009124",
+        "name": "Fox Business",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 39,
+        "stream_id": "FoxNews",
+        "tvguide_id": "9233006969",
+        "name": "Fox News",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 40,
+        "stream_id": "Freeform",
+        "tvguide_id": "9200000497",
+        "name": "Freeform",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 41,
+        "stream_id": "FS1",
+        "tvguide_id": "9233000539",
+        "name": "Fox Sports 1 (FS1)",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 42,
+        "stream_id": "FS2",
+        "tvguide_id": "9200009884",
+        "name": "Fox Sports 2 (FS2)",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 43,
+        "stream_id": "FX",
+        "tvguide_id": "9233006959",
+        "name": "FX",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 44,
+        "stream_id": "FXMovie",
+        "tvguide_id": "9233013967",
+        "name": "FX Movie Channel",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 45,
+        "stream_id": "FXX",
+        "tvguide_id": "9200014910",
+        "name": "FXX",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 46,
+        "stream_id": "GOLF",
+        "tvguide_id": "9200011865",
+        "name": "Golf Channel",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 47,
+        "stream_id": "GSN",
+        "tvguide_id": "9200019858",
+        "name": "Game Show Network",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 48,
+        "stream_id": "Hallmark",
+        "tvguide_id": "9200016034",
+        "name": "Hallmark Channel",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 49,
+        "stream_id": "HBO",
+        "tvguide_id": "9200004886",
+        "name": "HBO",
+        "category": "Premium",
+        "language": "en"
+    },
+    {
+        "id": 50,
+        "stream_id": "HGTV",
+        "tvguide_id": "9200004467",
+        "name": "Home & Garden TV",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 51,
+        "stream_id": "History",
+        "tvguide_id": "9233008002",
+        "name": "History",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 52,
+        "stream_id": "HLN",
+        "tvguide_id": "9233005762",
+        "name": "HLN",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 53,
+        "stream_id": "HMM",
+        "tvguide_id": "9200020115",
+        "name": "Hallmark Movies & Mysteries",
+        "category": "Movies",
+        "language": "en"
+    },
+    {
+        "id": 54,
+        "stream_id": "ID",
+        "tvguide_id": "9200002243",
+        "name": "Investigation Discovery",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 55,
+        "stream_id": "IONNY",
+        "tvguide_id": "9233015369",
+        "name": "ION (WPXN) New York",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 56,
+        "stream_id": "Lifetime",
+        "tvguide_id": "9200000502",
+        "name": "Lifetime",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 57,
+        "stream_id": "LifetimeM",
+        "tvguide_id": "9200000502",
+        "name": "Lifetime Movie Network",
+        "category": "Movies",
+        "language": "en"
+    },
+    {
+        "id": 58,
+        "stream_id": "MLB",
+        "tvguide_id": "9200009223",
+        "name": "MLB Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 59,
+        "stream_id": "MotorTrend",
+        "tvguide_id": "9233003479",
+        "name": "Motor Trend",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 60,
+        "stream_id": "MSNBC",
+        "tvguide_id": "9233006803",
+        "name": "MSNBC",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 61,
+        "stream_id": "MTV",
+        "tvguide_id": "9233015501",
+        "name": "MTV",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 62,
+        "stream_id": "NatGEO",
+        "tvguide_id": "9233009337",
+        "name": "National Geographic",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 63,
+        "stream_id": "NatGEOWild",
+        "tvguide_id": "9200004683",
+        "name": "National Geographic Wild",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 64,
+        "stream_id": "NBA",
+        "tvguide_id": "9200000070",
+        "name": "NBA TV",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 65,
+        "stream_id": "NBC",
+        "tvguide_id": "9233009876",
+        "name": "NBC",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 66,
+        "stream_id": "NBCNY",
+        "tvguide_id": "9200016000",
+        "name": "NBC 4 New York",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 67,
+        "stream_id": "NBCSN",
+        "tvguide_id": "9233000030",
+        "name": "NBC Sports (NBCSN)",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 68,
+        "stream_id": "NFL",
+        "tvguide_id": "9200004330",
+        "name": "NFL Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 69,
+        "stream_id": "NFLRZ",
+        "tvguide_id": "9233000241",
+        "name": "NFL RedZone",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 70,
+        "stream_id": "Nickelodeon",
+        "tvguide_id": "9233011497",
+        "name": "Nickelodeon",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 71,
+        "stream_id": "Nicktoons",
+        "tvguide_id": "9200020469",
+        "name": "Nicktoons",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 72,
+        "stream_id": "OAN",
+        "tvguide_id": "9200005058",
+        "name": "One America News Network",
+        "category": "News",
+        "language": "en"
+    },
+    {
+        "id": 73,
+        "stream_id": "OWN",
+        "tvguide_id": "9200004740",
+        "name": "Oprah Winfrey Network (OWN)",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 74,
+        "stream_id": "OLY",
+        "tvguide_id": "9233008939",
+        "name": "Olympic Channel",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 75,
+        "stream_id": "Oxygen",
+        "tvguide_id": "9200012145",
+        "name": "Oxygen",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 76,
+        "stream_id": "Paramount",
+        "tvguide_id": "9233001931",
+        "name": "Paramount Network",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 77,
+        "stream_id": "PBS",
+        "tvguide_id": "9233004141",
+        "name": "PBS",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 78,
+        "stream_id": "POP",
+        "tvguide_id": "9200018304",
+        "name": "Pop",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 79,
+        "stream_id": "Science",
+        "tvguide_id": "9200019847",
+        "name": "Science",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 80,
+        "stream_id": "SECN",
+        "tvguide_id": "9233002484",
+        "name": "SEC Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 81,
+        "stream_id": "Showtime",
+        "tvguide_id": "9233011188",
+        "name": "Showtime",
+        "category": "Premium",
+        "language": "en"
+    },
+    {
+        "id": 82,
+        "stream_id": "StarZ",
+        "tvguide_id": "9233013809",
+        "name": "Starz",
+        "category": "Premium",
+        "language": "en"
+    },
+    {
+        "id": 83,
+        "stream_id": "SundanceTV",
+        "tvguide_id": "9233001687",
+        "name": "Sundance TV",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 84,
+        "stream_id": "SYFY",
+        "tvguide_id": "9200004316",
+        "name": "Syfy",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 85,
+        "stream_id": "TBS",
+        "tvguide_id": "9233011348",
+        "name": "TBS",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 86,
+        "stream_id": "TCM",
+        "tvguide_id": "9200017928",
+        "name": "Turner Classic Movies (TCM)",
+        "category": "Movies",
+        "language": "en"
+    },
+    {
+        "id": 87,
+        "stream_id": "Telemundo",
+        "tvguide_id": "9200011857",
+        "name": "Telemundo",
+        "category": "En Español",
+        "language": "es"
+    },
+    {
+        "id": 88,
+        "stream_id": "Tennis",
+        "tvguide_id": "9200017917",
+        "name": "Tennis Channel",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 89,
+        "stream_id": "TLC",
+        "tvguide_id": "9200016249",
+        "name": "The Learning Channel (TLC)",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 90,
+        "stream_id": "TNT",
+        "tvguide_id": "9233011830",
+        "name": "Turner Network Television (TNT)",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 91,
+        "stream_id": "Travel",
+        "tvguide_id": "9233000035",
+        "name": "Travel Channel",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 92,
+        "stream_id": "TruTV",
+        "tvguide_id": "9233015561",
+        "name": "truTV",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 93,
+        "stream_id": "TVLand",
+        "tvguide_id": "9233005468",
+        "name": "TV Land",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 94,
+        "stream_id": "TWC",
+        "tvguide_id": "9200016258",
+        "name": "The Weather Channel",
+        "category": "Weather",
+        "language": "en"
+    },
+    {
+        "id": 95,
+        "stream_id": "Univision",
+        "tvguide_id": "9200000867",
+        "name": "Univisión Network",
+        "category": "En Español",
+        "language": "es"
+    },
+    {
+        "id": 96,
+        "stream_id": "USANetwork",
+        "tvguide_id": "9200009133",
+        "name": "USA Network",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 97,
+        "stream_id": "VH1",
+        "tvguide_id": "9233000037",
+        "name": "VH1",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 98,
+        "stream_id": "WETV",
+        "tvguide_id": "9233003770",
+        "name": "We TV",
+        "category": "Lifestyle",
+        "language": "en"
+    },
+    {
+        "id": 99,
+        "stream_id": "WWE",
+        "tvguide_id": "",
+        "name": "WWE Network",
+        "category": "Sports",
+        "language": "en"
+    },
+    {
+        "id": 100,
+        "stream_id": "YES",
+        "tvguide_id": "9200004247",
+        "name": "YES Network",
+        "category": "Sports",
+        "language": "en"
+    }
+]

@@ -1,69 +1,186 @@
-# Playlist downloader for ustvgo.tv
+<div align="center">
+    <h1>
+        <a href="#">
+            <img alt="USTVGO-IPTV Logo" width="50%" src="https://user-images.githubusercontent.com/20641837/172721800-8febe428-280b-439c-af88-3da2627f64e9.svg"/>
+        </a>
+    </h1>
+</div>
+
+<div align="center">
+    <a href="https://github.com/interlark/test_repo3/actions/workflows/tvguide.yml"><img alt="TV Guide status" src="https://github.com/interlark/test_repo3/actions/workflows/tvguide.yml/badge.svg"/></a>
+    <a href="https://pypi.org/project/ustvgo-iptv"><img alt="PyPi version" src="https://badgen.net/pypi/v/ustvgo-iptv"/></a>
+    <a href="https://pypi.org/project/ustvgo-iptv"><img alt="Supported platforms" src="https://badgen.net/badge/platform/Linux,macOS,Windows?list=|"/></a>
+</div><br>
+
+**USTVGO-IPTV** is an app that allows you to watch **free IPTV**.
+
+It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **generates master playlist** with available TV channels for IPTV players and **proxies the traffic** between your IPTV players and streaming backends.
+
+
+## Features
+- 🔑 Auto auth-key rotation
+  > As server proxies the traffic it can detect if your auth key is expired and refresh it on the fly.
+- 📺 Available [TV Guide](https://github.com/interlark/ustvgo-iptv/tree/tvguide)
+  > `tvguide` branch generates EPG XML for upcoming programs for all the channels twice an hour.
+- [![](https://user-images.githubusercontent.com/20641837/172720671-e1995eed-85c1-403e-acdf-b90cabeb990c.svg)](https://github.com/interlark/ustvgo-iptv/tree/tvguide/images/icons/channels)
+Two iconsets for IPTV players with light and dark backgrounds
+  > There are 2 channel iconsets adapted for apps with light and dark UI themes.
+- 🗔 Cross-platform GUI
+  > GUI is available for Windows, Linux and MacOS for people who're not that much into CLI.
+
 
 ## Installation
+- **CLI**
+  ```bash
+  pip install ustvgo-iptv
+  ```
+- **GUI**
 
-Script uses **Selenium & Firefox (Gecko driver)**, so make sure you've installed **Firefox browser** on your computer, all the rest get installed automatically.
-
-```bash
-git clone https://github.com/interlark/ustvgo_downloader
-cd ustvgo_downloader
-pip3 install -r requirements.txt
-```
+  You can download GUI app from [Releases](https://github.com/interlark/ustvgo-iptv/releases/latest) for your OS.
 
 ## Usage
 
-1. Use [download.py](download.py) to **download** playlist [ustvgo.m3u8](ustvgo.m3u8) from [ustvgo.tv](http://ustvgo.tv/) if you need it:
-    > It's not required, since you can use the already [existing](ustvgo.m3u8) playlist, so you can skip this step.
+- **Basic usage**
 
-    ```bash
-    python3 download.py
-    ```
+  To generate master playlist, you could simple run app without any arguments.
+  ```
+  ustvgo-iptv
+  ```
 
-    ```text 
-    [1/81] Successfully collected link for GSN
-    [2/81] Successfully collected link for LIFETIME MOVIES
-    [3/81] Successfully collected link for ANIMAL PLANET
-    [4/81] Successfully collected link for NBC SPORTS
-    ...
-    ```
+  <img alt="USTVGO-IPTV CLI screencast" width="666" src="https://user-images.githubusercontent.com/20641837/172928789-ea3e3d84-3b1b-41dd-8d99-37825ca501bb.gif"/>
 
-2. Use [update.py](update.py) to **update** authentication key:
 
-    > Every key is valid for 4 hours.
-    ```bash
-    python3 update.py
-    ```
+- **Iconset**
 
-    ```text
-    Recieved key: c2VakmPyX...aW52dRVzoTI1MA==
-    Updating ustvgo.m3u8 playlist...
-    ```
+  By default channel icons are adapted for **dark backgrounds**, in case your IPTV player have light UI theme you can switch iconset to appropriate with following option **`--icons-for-light-bg`**
+  ```
+  ustvgo-iptv --icons-for-light-bg
+  ```
 
-3. **Play** collected/updated playlist:
-    ```bash
-    vlc ustvgo.m3u8 --adaptive-use-access
-    ```
+- **Access logs**
 
-## Troubleshooting
-* If you run script on dedicated headless server and bump into erros like **Failed to collect link** - seems like you don't have **AVC codecs** installed on your server, try install them with
-```bash
-sudo apt-get install ubuntu-restricted-extras
-```
-if you have ubuntu server installed or commonly
-```bash
-sudo apt-get install libavcodec58 libav-tools
-```
-* If you get errors and now guessing what's going wrong, try to run script with **--no-headless** argument to see what's going on in the browser
-```bash
-python3 download.py --no-headless
-```
-or 
+  To enable access logs for tracking requests activity use option **`--access-logs`**
+  ```
+  ustvgo-iptv --access-logs
+  ```
 
-```bash
-python3 update.py --no-headless
-```
+- **Server port**
 
-## Tips
-* In case if you're not a native speaker and use TV, Cartoons, Movies and Shows to **learn the language** - on some channels you can **turn on subtitles** that make it easier pretty much.
+  By default the port is **6363**. You can change it with option **`--port`**
+  ```
+  ustvgo-iptv --port 1234
+  ```
 
-![Subtitles screenshot](https://raw.githubusercontent.com/interlark/ustvgo_downloader/master/assets/subtitles-screenshot.png)
+- **Parallel requests**
+
+  When server starts it initiate collecting stream URLs for master playlist using **10** parallel requests. You can specify number of parallel requests with option **`--parallel`**
+  ```
+  ustvgo-iptv --parallel 12
+  ```
+
+- **GUI**
+
+  <img alt="USTVGO-IPTV GUI screenshot" src="https://user-images.githubusercontent.com/20641837/173133709-dcaa943f-1147-4b59-8c3e-a282f0e789a4.png"/>
+
+  With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with config file on following path:
+    * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
+    * **Mac**: ~/Library/Application Support/ustvgo-iptv/settings.cfg
+    * **Windows**: C:\Users\\%USERPROFILE%\AppData\Local\ustvgo-iptv\settings.cfg
+
+## URLs
+To play and enjoy your free IPTV you need 2 URLs:
+1) Your generated **master playlist**: 🔗 http://127.0.0.1:6363/ustvgo.m3u8
+2) **TV Guide** (content updates twice an hour):
+    * 🔗 [XML EPG for IPTV players with light UI theme](https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-light-bg.xml)
+    * 🔗 [XML EPG for IPTV players with dark UI theme](https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-dark-bg.xml)
+
+## Players
+  Here is a **list** of popular IPTV players.
+  
+  **USTVGO**'s channels have **EIA-608** embedded subtitles. In case if you're not a native speaker and use *TV*, *Cartoons*, *Movies* and *Shows* to learn English and Spanish languages I would recommend you following free open-source cross-platform IPTV players that can handle EIA-608 subtitles:
+  - **[VLC](https://github.com/videolan/vlc)**
+  
+      This old beast could play **any subtitles**. Unfortunately it **doesn't support TV Guide**.
+      
+      - **Play**
+        ```bash
+        vlc http://127.0.0.1:6363/ustvgo.m3u8
+        ```
+  - **[MPV](https://github.com/mpv-player/mpv)**
+      
+      Fast and extensible player. It **supports subtitles**, but not that good as VLC, sometimes you could encounter troubles playing roll-up subtitles. Unfortunately it **doesn't suppport TV Guide**.
+      
+      - **Play**
+        ```bash
+        mpv http://127.0.0.1:6363/ustvgo.m3u8
+        ```
+  - **[Jellyfin Media Player](https://github.com/jellyfin/jellyfin-media-player)**
+    
+    <img alt="Jellyfin Media Player screenshot" width="49%" src="https://user-images.githubusercontent.com/20641837/173064009-655ddba8-0977-40cb-9953-2741c935db58.jpg"/>
+    <img alt="Jellyfin Media Player screenshot" width="49%" src="https://user-images.githubusercontent.com/20641837/173064070-0d777d2c-04e9-4a01-9e8b-3b770f2ef8b1.jpg"/>
+
+    Comfortable, handy, extensible with smooth UI player. **Supports TV Guide**, has **mpv** as a backend.
+    
+    **Supports subtitles**, but there is no option to enable them via user interface. If you want to enable IPTV subtitles you have to use following "Mute" hack.
+  
+    - **Enable IPTV subtitles**
+    
+      I found a quick hack to force play embedded IPTV subtitles, all you need is to create one file:
+    
+      > Linux: `~/.local/share/jellyfinmediaplayer/scripts/subtitles.lua`
+    
+      > Linux(Flatpak): `~/.var/app/com.github.iwalton3.jellyfin-media-player/data/jellyfinmediaplayer/scripts/subtitles.lua`
+    
+      > MacOS: `~/Library/Application Support/Jellyfin Media Player/scripts/subtitles.lua`
+    
+      > Windows: `%LOCALAPPDATA%\JellyfinMediaPlayer\scripts\subtitles.lua`
+    
+      And paste following text in there:
+    
+      ```lua
+      -- File: subtitles.lua
+      function on_mute_change(name, value)
+          if value then
+              local subs_id = mp.get_property("sid")
+              if subs_id == "1" then
+                  mp.osd_message("Subtitles off")
+                  mp.set_property("sid", "0")
+              else
+                  mp.osd_message("Subtitles on")
+                  mp.set_property("sid", "1")
+              end
+          end
+      end
+
+      mp.observe_property("mute", "bool", on_mute_change)
+      ```
+      After that every time you mute a video *(🅼 key pressed)*, you toggle subtitles on/off as a side effect.
+      
+    - **Play**
+      ```
+      1) Settings -> Dashboard -> Live TV -> Tuner Devices -> Add -> M3U Tuner -> URL -> http://127.0.0.1:6363/ustvgo.m3u8
+      2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-dark-bg.xml
+      ```
+    - **Note**
+      ```
+      Some versions does not support compressed (*.xml.gz) TV Guides.
+      ```
+  
+  - **[IPTVnator](https://github.com/4gray/iptvnator)**
+  
+    <img alt="IPTVnator screenshot" width="666" src="https://user-images.githubusercontent.com/20641837/173046785-4abd2b6a-5f17-4d9b-befb-f53c9fe55d76.jpg"/>
+
+    Player built with [Electron](https://github.com/electron/electron) so you can run it even in browser, has light and dark themes.
+    
+    **Support subtitles and TV Guide.**
+   
+    - **Play**
+      ```
+      1) Add via URL -> http://127.0.0.1:6363/ustvgo.m3u8
+      2) Settings -> EPG Url -> https://raw.githubusercontent.com/interlark/ustvgo-iptv/tvguide/ustvgo.for-light-bg.xml.gz
+      ```
+
+## Support
+- [ustvgo.tv](https://ustvgo.tv) is wonderful project which can offer you a free IPTV, please support these guys buying VPN with their [referral link](https://ustvgo.tv/vpn). With VPN you can watch even more of their channels, like extra 25 or so.
+
+- Also I would highly appreciate your support on this project ⠀<a href="https://www.buymeacoffee.com/interlark" target="_blank"><img alt="Buy Me A Coffee" src="https://cdn.buymeacoffee.com/buttons/default-orange.png" width="178" height="41"></a>
