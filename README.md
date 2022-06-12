@@ -160,6 +160,7 @@ To play and enjoy your free IPTV you need 2 URLs:
       ```
       1) Settings -> Dashboard -> Live TV -> Tuner Devices -> Add -> M3U Tuner -> URL -> http://127.0.0.1:6363/ustvgo.m3u8
       2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml
+      3) Settings -> Dashboard -> Scheduled Tasks -> Live TV -> Refresh Guide -> Task Triggers -> "Every 30 minutes"
       ```
     - **Note**
       ```
