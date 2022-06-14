@@ -190,10 +190,11 @@ def setup_gui_logger(log_queue):
 
 
 def patch_tqdm(tqdm, window, event_key='@PROGRESS_UPDATE'):
-    """Patch tqdm to make it dublicate progress to `message_queue`.
+    """Make tqdm send its progress to GUI window.
     Args:
-        tqdm (tqdm.tqdm) Tqdm class to be patched.
-        message_queue (multiprocessing.Queue): Message queue.
+        tqdm (tqdm.tqdm): tqdm class to be patched.
+        window (sg.Window): PySimpleGUI window.
+        event_key: Event name for progress updated.
     """
     original_update = tqdm.update
     original_close = tqdm.close
