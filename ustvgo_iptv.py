@@ -217,7 +217,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
 
             except aiohttp.ClientPayloadError as e:
                 if retry >= max_retries:
-                    return web.Response(text=e.message, status=500)
+                    return web.Response(text=str(e), status=500)
 
             except aiohttp.ClientError as e:
                 logger.error('[Retry %d] Error occured during handling request: %s',
