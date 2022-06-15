@@ -203,7 +203,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
                     )
             except aiohttp.ClientResponseError as e:
                 if retry >= max_retries:
-                    return web.Response(text=e.message, status=e.status)
+                    return web.Response(text=str(e), status=e.status)
 
                 if request.path.endswith('.m3u8') and e.status == 404:
                     notfound_segment_url = furl(tvguide_base_url) / 'assets' / '404.ts'
