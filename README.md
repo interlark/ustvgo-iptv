@@ -17,7 +17,7 @@
 It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **generates master playlist** with available TV channels for IPTV players and **proxies the traffic** between your IPTV players and streaming backends.
 
 
-## Features
+## ✨ Features
 - 🔑 Auto auth-key rotation
   > As server proxies the traffic it can detect if your auth key is expired and refresh it on the fly.
 - 📺 Available [TV Guide](https://github.com/interlark/ustvgo-tvguide)
@@ -29,7 +29,7 @@ Two iconsets for IPTV players with light and dark backgrounds
   > GUI is available for Windows, Linux and MacOS for people who're not that much into CLI.
 
 
-## Installation
+## 🚀 Installation
 - **CLI**
   ```bash
   pip install ustvgo-iptv
@@ -38,7 +38,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 
   You can download GUI app from [Releases](https://github.com/interlark/ustvgo-iptv/releases/latest) for your OS.
 
-## Usage
+## ⚙️ Usage
 
 - **Basic usage**
 
@@ -87,14 +87,14 @@ Two iconsets for IPTV players with light and dark backgrounds
     * **Mac**: ~/Library/Application Support/ustvgo-iptv/settings.cfg
     * **Windows**: C:\Users\\%USERPROFILE%\AppData\Local\ustvgo-iptv\settings.cfg
 
-## URLs
+## 🔗 URLs
 To play and enjoy your free IPTV you need 2 URLs:
 1) Your generated **master playlist**: 🔗 http://127.0.0.1:6363/ustvgo.m3u8
 2) **TV Guide** (content updates twice an hour):
     * 🔗 [XML EPG for IPTV players with light UI theme](https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-light-bg.xml)
     * 🔗 [XML EPG for IPTV players with dark UI theme](https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml)
 
-## Players
+## ▶️ Players
   Here is a **list** of popular IPTV players.
   
   **USTVGO**'s channels have **EIA-608** embedded subtitles. In case if you're not a native speaker and use *TV*, *Cartoons*, *Movies* and *Shows* to learn English and Spanish languages I would recommend you following free open-source cross-platform IPTV players that can handle EIA-608 subtitles:
@@ -160,6 +160,7 @@ To play and enjoy your free IPTV you need 2 URLs:
       ```
       1) Settings -> Dashboard -> Live TV -> Tuner Devices -> Add -> M3U Tuner -> URL -> http://127.0.0.1:6363/ustvgo.m3u8
       2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml
+      3) Settings -> Dashboard -> Scheduled Tasks -> Live TV -> Refresh Guide -> Task Triggers -> "Every 30 minutes"
       ```
     - **Note**
       ```
@@ -180,7 +181,7 @@ To play and enjoy your free IPTV you need 2 URLs:
       2) Settings -> EPG Url -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-light-bg.xml.gz
       ```
 
-## Support
+## 👍 Support
 - [ustvgo.tv](https://ustvgo.tv) is wonderful project which can offer you a free IPTV, please support these guys buying VPN with their [referral link](https://ustvgo.tv/vpn). With VPN you can watch even more of their channels, like extra 25 or so.
 
 - Also I would highly appreciate your support on this project ⠀<a href="https://www.buymeacoffee.com/interlark" target="_blank"><img alt="Buy Me A Coffee" src="https://cdn.buymeacoffee.com/buttons/default-orange.png" width="178" height="41"></a>
