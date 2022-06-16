@@ -25,7 +25,7 @@ from tqdm.asyncio import tqdm
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
 
 
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
@@ -203,7 +203,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
                     )
             except aiohttp.ClientResponseError as e:
                 if retry >= max_retries:
-                    return web.Response(text=str(e), status=e.status)
+                    return web.Response(text=e.message, status=e.status)
 
                 if request.path.endswith('.m3u8') and e.status == 404:
                     notfound_segment_url = furl(tvguide_base_url) / 'assets' / '404.ts'
@@ -223,7 +223,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
 
             except aiohttp.ClientPayloadError as e:
                 if retry >= max_retries:
-                    return web.Response(text=e.message, status=500)
+                    return web.Response(text=str(e), status=500)
 
             except aiohttp.ClientError as e:
                 logger.error('[Retry %d] Error occured during handling request: %s',
