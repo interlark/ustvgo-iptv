@@ -25,7 +25,7 @@ from tqdm.asyncio import tqdm
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
 
 
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
@@ -114,7 +114,7 @@ def render_playlist(channels, host, tvguide_base_url, icons_for_light_bg):
         f.write('#EXTM3U url-tvg="%s" refresh="1800"\n\n' % tvg_url)
         for channel in channels:
             if channel.get('stream_url'):
-                tvg_logo = furl(tvguide_base_url) / 'images' / 'icons' / 'channels' / \
+                tvg_logo = furl(tvguide_base_url) / 'images/icons/channels' / \
                     color_scheme / (channel['stream_id'] + '.png')
                 stream_url = (furl(channel['stream_url'])
                               .set(netloc=host, scheme='http')
@@ -145,44 +145,39 @@ async def collect_urls(channels, parallel):
     return channels_ok
 
 
-async def update_auth_key(channels):
+async def update_auth_key(channel):
     """Update auth key."""
-    logger.info('Fetching new auth key from USTVGO.')
-    for channel in channels:
-        if await retrieve_stream_url(channel):
-            auth_key = channel['stream_url'].args.get('wmsAuthSign')
-            logger.info('Got new auth key "%s"', auth_key)
-            return auth_key
-
-    logger.error('Update auth key failed')
+    if await retrieve_stream_url(channel):
+        auth_key = channel['stream_url'].args.get('wmsAuthSign')
+        return auth_key
 
 
 async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_for_light_bg):
     """Run proxying server with key rotation."""
     async def master_handler(request):
-        async with auth_key_lock:
-            return web.Response(
-                text=render_playlist(channels, request.host, tvguide_base_url, icons_for_light_bg),
-                status=200
-            )
+        return web.Response(
+            text=render_playlist(channels, request.host, tvguide_base_url, icons_for_light_bg),
+            status=200
+        )
 
     async def stream_handler(request):
-        nonlocal auth_key, auth_key_retrieved_time
         stream_id = request.match_info.get('stream_id')
 
-        if stream_id not in channel_origins:
+        if stream_id not in streams:
             return web.Response(status=404)
 
+        channel = streams[stream_id]
         headers = {key: value for key, value in request.headers.items()
                    if key.lower() not in ('host', 'user-agent')}
         headers = {**USTVGO_HEADERS, **headers}
 
         data = await request.read()
-        max_retries = 2  # Second retry for 403-forbidden recovery or response payload error
+        max_retries = 2  # Second retry for 403-forbidden recovery or response payload errors
 
         for retry in range(1, max_retries + 1):
             url = furl(request.path_qs).set(
-                origin=channel_origins[stream_id], args={'wmsAuthSign': auth_key}
+                origin=channel['stream_origin'],
+                args={'wmsAuthSign': channel['auth_key']}
             ).tostr(query_dont_quote='=')
 
             try:
@@ -212,22 +207,25 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
                         f'#EXTINF:10.000\n{notfound_segment_url}\n#EXT-X-ENDLIST'
                     ))
 
-                async with auth_key_lock:
-                    if e.status == 403 and time.time() - auth_key_retrieved_time > 5:
-                        new_auth_key = await update_auth_key(channels)
+                auth_key = channel['auth_key']
+                async with auth_key.lock:
+                    if e.status == 403 and time.time() - auth_key.retrieved_time > 5:
+                        logger.info('%s Fetching new auth key from USTVGO.', auth_key.log_prefix)
+                        new_auth_key = await update_auth_key(channel)
                         if new_auth_key:
-                            auth_key = new_auth_key
-                            auth_key_retrieved_time = time.time()
+                            auth_key.key = new_auth_key
+                            logger.info('%s Got new auth key "%s"', auth_key.log_prefix, auth_key)
+                            auth_key.retrieved_time = time.time()
                         else:
-                            logger.error('[Retry %d] Failed to get new auth key', retry)
+                            logger.error('%s Failed to get new auth key!', auth_key.log_prefix)
 
             except aiohttp.ClientPayloadError as e:
                 if retry >= max_retries:
                     return web.Response(text=str(e), status=500)
 
             except aiohttp.ClientError as e:
-                logger.error('[Retry %d] Error occured during handling request: %s',
-                             retry, e, exc_info=True)
+                logger.error('[Retry %d/%d] Error occured during handling request: %s',
+                             retry, max_retries, e, exc_info=True)
 
     # Load channels info
     channels = load_dict('channels.json')
@@ -239,18 +237,42 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
         logger.error('No channels were retrieved!')
         return
 
-    # Get initial auth key
-    auth_key_lock = asyncio.Lock()
-    auth_key = channels[0]['stream_url'].args.get('wmsAuthSign')
-    auth_key_retrieved_time = 0
-    logger.info('Got auth key "%s"', auth_key)
+    # Auth keys
+    class AuthKey:
+        def __init__(self, is_vip):
+            self.log_prefix = '[VIP (VPN)]' if is_vip else '[No VIP (No VPN)]'
+            self.key = ''
+            self.is_vip = is_vip
+            self.lock = asyncio.Lock()
+            self.retrieved_time = 0
 
-    if not auth_key:
-        logger.info('Auth key is empty!', auth_key)
+        def __str__(self):
+            return self.key
+
+    nonvip_auth_key = AuthKey(is_vip=False)
+    vip_auth_key = AuthKey(is_vip=True)
+
+    # Add stream origins, vip flags, auth keys
+    for channel in channels:
+        channel['stream_origin'] = channel['stream_url'].origin
+        channel['is_vip'] = '/vipStream/' in channel['stream_url'].url
+        channel['auth_key'] = vip_auth_key if channel['is_vip'] else nonvip_auth_key
+
+        for auth_key in nonvip_auth_key, vip_auth_key:
+            if not auth_key.key and (channel['is_vip'] == auth_key.is_vip):
+                auth_key.key = channel['stream_url'].args.get('wmsAuthSign')
+
+    # Transform list into a map for better accessibility
+    streams = {x['stream_id']: x for x in channels}
+
+    # Print auth keys
+    for auth_key in nonvip_auth_key, vip_auth_key:
+        if auth_key.key:
+            logger.info('%s Init auth key with "%s"', auth_key.log_prefix, auth_key)
+
+    if not nonvip_auth_key.key and not vip_auth_key.key:
+        logger.error('No auth keys were retrieved!')
         return
-
-    # Upstream origins
-    channel_origins = {x['stream_id']: x['stream_url'].origin for x in channels}
 
     # Setup access logging
     access_logger = logging.getLogger('aiohttp.access')
