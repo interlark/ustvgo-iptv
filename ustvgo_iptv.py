@@ -234,7 +234,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
     # Auth keys
     class AuthKey:
         def __init__(self, is_vip):
-            self.log_prefix = '[VIP (VPN)]' if is_vip else '[No VIP (No VPN)]' 
+            self.log_prefix = '[VIP (VPN)]' if is_vip else '[No VIP (No VPN)]'
             self.key = ''
             self.is_vip = is_vip
             self.lock = asyncio.Lock()
@@ -255,7 +255,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
         for auth_key in nonvip_auth_key, vip_auth_key:
             if not auth_key.key and (channel['is_vip'] == auth_key.is_vip):
                 auth_key.key = channel['stream_url'].args.get('wmsAuthSign')
-    
+
     # Transform list into a map for better accessibility
     streams = {x['stream_id']: x for x in channels}
 
