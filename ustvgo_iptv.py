@@ -10,12 +10,22 @@ import re
 import sys
 import time
 from functools import partial
+from typing import Any, Awaitable, Callable, List, Optional
 
 import aiohttp
 import netifaces
 from aiohttp import web
 from furl import furl
 from tqdm.asyncio import tqdm
+
+if sys.version_info >= (3, 8):
+    from typing import TypedDict
+else:
+    from typing_extensions import TypedDict
+
+Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
+                                'name': str, 'category': str, 'language': str,
+                                'stream_url': furl})
 
 # Fix for https://github.com/pyinstaller/pyinstaller/issues/1113
 ''.encode('idna')
@@ -25,7 +35,7 @@ from tqdm.asyncio import tqdm
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
 
 
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
@@ -38,24 +48,24 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def root_dir():
+def root_dir() -> pathlib.Path:
     """Root directory."""
     if hasattr(sys, '_MEIPASS'):
-        return pathlib.Path(sys._MEIPASS)
+        return pathlib.Path(sys._MEIPASS)  # type: ignore
     else:
         return pathlib.Path(__file__).parent
 
 
-def load_dict(filename):
+def load_dict(filename: str) -> Any:
     """Load root dictionary."""
     filepath = root_dir() / filename
     with open(filepath, encoding='utf-8') as f:
         return json.load(f)
 
 
-def local_ip_addresses():
+def local_ip_addresses() -> List[str]:
     """Finding all local IP addresses."""
-    ip_addresses = []
+    ip_addresses: List[str] = []
     interfaces = netifaces.interfaces()
     for i in interfaces:
         iface = netifaces.ifaddresses(i).get(netifaces.AF_INET, [])
@@ -64,20 +74,22 @@ def local_ip_addresses():
     return ip_addresses
 
 
-async def gather_with_concurrency(n, *tasks, show_progress=True, progress_title=None):
+async def gather_with_concurrency(n: int, *tasks: Awaitable[Any],
+                                  show_progress: bool = True,
+                                  progress_title: Optional[str] = None) -> Any:
     """Gather tasks with concurrency."""
     semaphore = asyncio.Semaphore(n)
 
-    async def sem_task(task):
+    async def sem_task(task: Awaitable[Any]) -> Any:
         async with semaphore:
             return await task
 
     gather = partial(tqdm.gather, desc=progress_title) if show_progress \
         else asyncio.gather
-    return await gather(*[sem_task(x) for x in tasks])
+    return await gather(*[sem_task(x) for x in tasks])  # type: ignore
 
 
-async def retrieve_stream_url(channel, max_retries=5):
+async def retrieve_stream_url(channel: Channel, max_retries: int = 5) -> Optional[Channel]:
     """Retrieve stream URL from web player with retries."""
     url = 'https://ustvgo.tv/player.php?stream=' + channel['stream_id']
     timeout, max_timeout = 2, 10
@@ -106,16 +118,17 @@ async def retrieve_stream_url(channel, max_retries=5):
                 return None
 
 
-def render_playlist(channels, host, tvguide_base_url, icons_for_light_bg):
+def render_playlist(channels: List[Channel], host: str, use_uncompressed_tvguide: bool) -> str:
     """Render master playlist."""
     with io.StringIO() as f:
-        color_scheme = 'for-light-bg' if icons_for_light_bg else 'for-dark-bg'
-        tvg_url = furl(tvguide_base_url) / f'ustvgo.{color_scheme}.xml.gz'
+        base_url = furl(netloc=host, scheme='http')
+        tvg_compressed_ext = '' if use_uncompressed_tvguide else '.gz'
+        tvg_url = base_url / f'tvguide.xml{tvg_compressed_ext}'
+
         f.write('#EXTM3U url-tvg="%s" refresh="1800"\n\n' % tvg_url)
         for channel in channels:
             if channel.get('stream_url'):
-                tvg_logo = furl(tvguide_base_url) / 'images/icons/channels' / \
-                    color_scheme / (channel['stream_id'] + '.png')
+                tvg_logo = base_url / 'logos' / (channel['stream_id'] + '.png')
                 stream_url = (furl(channel['stream_url'])
                               .set(netloc=host, scheme='http')
                               # No need to expose auth key to the master playlist
@@ -129,7 +142,7 @@ def render_playlist(channels, host, tvguide_base_url, icons_for_light_bg):
         return f.getvalue()
 
 
-async def collect_urls(channels, parallel):
+async def collect_urls(channels: List[Channel], parallel: int) -> List[Channel]:
     """Collect channel stream URLs from ustvgo.tv web players."""
     logger.info('Extracting stream URLs from USTVGO. Parallel requests: %d.', parallel)
     retrieve_tasks = [retrieve_stream_url(channel) for channel in channels]
@@ -145,30 +158,65 @@ async def collect_urls(channels, parallel):
     return channels_ok
 
 
-async def update_auth_key(channel):
+async def update_auth_key(channel: Channel) -> Optional[str]:
     """Update auth key."""
     if await retrieve_stream_url(channel):
-        auth_key = channel['stream_url'].args.get('wmsAuthSign')
+        auth_key: str = channel['stream_url'].args.get('wmsAuthSign')
         return auth_key
 
+    return None
 
-async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_for_light_bg):
+
+async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
+                          access_logs: bool, icons_for_light_bg: bool,
+                          use_uncompressed_tvguide: bool) -> None:
     """Run proxying server with key rotation."""
-    async def master_handler(request):
+    async def master_handler(request: web.Request) -> web.Response:
+        """Master playlist handler."""
         return web.Response(
-            text=render_playlist(channels, request.host, tvguide_base_url, icons_for_light_bg),
-            status=200
+            text=render_playlist(channels, request.host, use_uncompressed_tvguide)
         )
 
-    async def stream_handler(request):
+    async def logos_handler(request: web.Request) -> web.Response:
+        """Channel logos handler."""
+        color_scheme = 'for-light-bg' if icons_for_light_bg else 'for-dark-bg'
+        logo_url = (furl(tvguide_base_url) / 'images/icons/channels' /
+                    color_scheme / request.match_info.get('filename')).url
+        async with aiohttp.request(method=request.method, url=logo_url) as response:
+            content = await response.read()
+
+            return web.Response(
+                body=content, status=response.status,
+                content_type='image/png'
+            )
+
+    async def tvguide_handler(request: web.Request) -> web.Response:
+        """TV Guide handler."""
+        is_compressed = request.path.endswith('.gz')
+        compressed_ext = '.gz' if is_compressed else ''
+        color_scheme = 'for-light-bg' if icons_for_light_bg else 'for-dark-bg'
+        tvguide_filename = f'ustvgo.{color_scheme}.xml{compressed_ext}'
+        tvguide_url = furl(tvguide_base_url).add(path=tvguide_filename).url
+
+        async with aiohttp.request(method=request.method, url=tvguide_url) as response:
+            content = await response.read()
+            content_type = 'application/gzip' if is_compressed else 'application/xml'
+
+            return web.Response(
+                body=content, status=response.status,
+                content_type=content_type
+            )
+
+    async def stream_handler(request: web.Request) -> web.Response:
+        """Stream handler."""
         stream_id = request.match_info.get('stream_id')
 
         if stream_id not in streams:
-            return web.Response(status=404)
+            return web.Response(text='Stream not found!', status=404)
 
         channel = streams[stream_id]
-        headers = {key: value for key, value in request.headers.items()
-                   if key.lower() not in ('host', 'user-agent')}
+        headers = {name: value for name, value in request.headers.items()
+                   if name not in (aiohttp.hdrs.HOST, aiohttp.hdrs.USER_AGENT)}
         headers = {**USTVGO_HEADERS, **headers}
 
         data = await request.read()
@@ -182,15 +230,16 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
 
             try:
                 async with aiohttp.request(
-                    request.method, url, params=request.query, data=data,
+                    method=request.method, url=url,
+                    params=request.query, data=data,
                     headers=headers, raise_for_status=True
                 ) as response:
 
                     content = await response.read()
                     headers = {name: value for name, value in response.headers.items()
-                               if name.lower() not in
-                               ('content-encoding', 'content-length',
-                                'transfer-encoding', 'connection')}
+                               if name not in
+                               (aiohttp.hdrs.CONTENT_ENCODING, aiohttp.hdrs.CONTENT_LENGTH,
+                                aiohttp.hdrs.TRANSFER_ENCODING, aiohttp.hdrs.CONNECTION)}
 
                     return web.Response(
                         body=content, status=response.status,
@@ -201,7 +250,7 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
                     return web.Response(text=e.message, status=e.status)
 
                 if request.path.endswith('.m3u8') and e.status == 404:
-                    notfound_segment_url = furl(tvguide_base_url) / 'assets' / '404.ts'
+                    notfound_segment_url = furl(tvguide_base_url) / 'assets/404.ts'
                     return web.Response(text=(
                         '#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:10\n'
                         f'#EXTINF:10.000\n{notfound_segment_url}\n#EXT-X-ENDLIST'
@@ -226,6 +275,9 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
             except aiohttp.ClientError as e:
                 logger.error('[Retry %d/%d] Error occured during handling request: %s',
                              retry, max_retries, e, exc_info=True)
+                return web.Response(text=str(e), status=500)
+
+        return web.Response(text='', status=500)
 
     # Load channels info
     channels = load_dict('channels.json')
@@ -239,14 +291,14 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
 
     # Auth keys
     class AuthKey:
-        def __init__(self, is_vip):
+        def __init__(self, is_vip: bool) -> None:
             self.log_prefix = '[VIP (VPN)]' if is_vip else '[No VIP (No VPN)]'
             self.key = ''
             self.is_vip = is_vip
             self.lock = asyncio.Lock()
             self.retrieved_time = 0
 
-        def __str__(self):
+        def __str__(self) -> str:
             return self.key
 
     nonvip_auth_key = AuthKey(is_vip=False)
@@ -284,10 +336,14 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
     # Run server
     for ip_address in local_ip_addresses():
         logger.info(f'Serving http://{ip_address}:{port}/ustvgo.m3u8')
+        logger.info(f'Serving http://{ip_address}:{port}/tvguide.xml')
 
     app = web.Application()
-    app.router.add_get('/', master_handler)  # master
+    app.router.add_get('/', master_handler)  # master shortcut
     app.router.add_get('/ustvgo.m3u8', master_handler)  # master
+    app.router.add_get('/tvguide.xml', tvguide_handler)  # tvguide
+    app.router.add_get('/tvguide.xml.gz', tvguide_handler)  # tvguide compressed
+    app.router.add_get('/logos/{filename:[^/]+}', logos_handler)  # logos
     app.router.add_route('*', '/{stream_id}{tail:/.*}', stream_handler)  # proxy
 
     runner = web.AppRunner(app)
@@ -310,10 +366,11 @@ async def playlist_server(port, parallel, tvguide_base_url, access_logs, icons_f
         await runner.cleanup()  # cleanup used resources, release port
 
 
-def args_parser():
+def args_parser() -> argparse.ArgumentParser:
     """Command line arguments parser."""
-    def int_range(min_value=-sys.maxsize - 1, max_value=sys.maxsize):
-        def constrained_int(arg):
+    def int_range(min_value: int = -sys.maxsize - 1,
+                  max_value: int = sys.maxsize) -> Callable[[str], int]:
+        def constrained_int(arg: str) -> int:
             value = int(arg)
             if not min_value <= value <= max_value:
                 raise argparse.ArgumentTypeError(
@@ -349,13 +406,18 @@ def args_parser():
         help='Base TVGuide URL'
     )
     parser.add_argument(
+        '--use-uncompressed-tvguide',
+        action='store_true',
+        help='Use uncompressed version of TV Guide in "url-tvg" attribute'
+    )
+    parser.add_argument(
         '--version', '-v', action='version', version=f'%(prog)s {VERSION}'
     )
 
     return parser
 
 
-def main():
+def main() -> None:
     """Entry point."""
     # Invoke GUI's entry point
     from gui import main as main_gui

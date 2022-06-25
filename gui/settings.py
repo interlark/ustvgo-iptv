@@ -16,11 +16,12 @@ def save_settings(settings):
 
 def load_settings():
     """Load user settings."""
+    settings = default_settings()
     settings_path = config_path() / 'settings.cfg'
     if settings_path.is_file():
-        settings = json.loads(settings_path.read_text(encoding='utf-8'))
+        user_settings = json.loads(settings_path.read_text(encoding='utf-8'))
+        settings = {**settings, **user_settings}
     else:
-        settings = default_settings()
         save_settings(settings)
 
     return settings

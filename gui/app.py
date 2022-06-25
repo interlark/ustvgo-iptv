@@ -207,6 +207,6 @@ async def app():
     window.close()
 
 
-def main():
+def main() -> None:
     """Entry point."""
     asyncio.run(app())
