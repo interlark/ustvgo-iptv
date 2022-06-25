@@ -21,12 +21,12 @@ It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **genera
 - 🔑 Auto auth-key rotation
   > As server proxies the traffic it can detect if your auth key is expired and refresh it on the fly.
 - 📺 Available [TV Guide](https://github.com/interlark/ustvgo-tvguide)
-  > [TV Guide](https://github.com/interlark/ustvgo-tvguide) repo generates EPG XML for upcoming programs for all the channels twice an hour.
+  > [TV Guide](https://github.com/interlark/ustvgo-tvguide) repo generates EPG XML for upcoming programs of all the channels twice an hour.
 - [![](https://user-images.githubusercontent.com/20641837/173175879-aed31bd4-b188-4681-89df-5ffc3ea05a82.svg)](https://github.com/interlark/ustvgo-tvguide/tree/master/images/icons/channels)
 Two iconsets for IPTV players with light and dark backgrounds
   > There are 2 channel iconsets adapted for apps with light and dark UI themes.
 - 🗔 Cross-platform GUI
-  > GUI is available for Windows, Linux and MacOS for people who're not that much into CLI.
+  > GUI is available for Windows, Linux and MacOS for people who are not that much into CLI.
 
 
 ## 🚀 Installation
@@ -47,7 +47,7 @@ Two iconsets for IPTV players with light and dark backgrounds
   ustvgo-iptv
   ```
 
-  <img alt="USTVGO-IPTV CLI screencast" width="666" src="https://user-images.githubusercontent.com/20641837/173175914-4ba98af7-20eb-4373-88a9-0fc0757b7f58.gif"/>
+  <img alt="USTVGO-IPTV CLI screencast" width="666" src="https://user-images.githubusercontent.com/20641837/175779375-9a1a2525-b7ab-4d7f-90e9-b9e585e93902.gif"/>
 
 
 - **Iconset**
@@ -77,10 +77,21 @@ Two iconsets for IPTV players with light and dark backgrounds
   ```
   ustvgo-iptv --parallel 12
   ```
+  
+- **Uncompressed TV Guide**
+
+  Some IPTV players can automatically grab TV Gude from m3u8 playlists. For the URL they look at `url-tvg` attribute.
+  By default it has link to compressed version of TV Guide: `#EXTM3U url-tvg="http://127.0.0.1:6363/tvguide.xml.gz" refresh="1800"`.
+  
+  You can change it to uncompressed `"http://127.0.0.1:6363/tvguide.xml"`
+  with option **`--use-uncompressed-tvguide`**
+  ```
+  ustvgo-iptv --use-uncompressed-tvguide
+  ```
 
 - **GUI**
 
-  <img alt="USTVGO-IPTV GUI screenshot" src="https://user-images.githubusercontent.com/20641837/173175939-f83b872c-b221-4077-b2ab-554c5766cadc.png"/>
+  <img alt="USTVGO-IPTV GUI screencast" src="https://user-images.githubusercontent.com/20641837/175779405-1076a072-0c58-4264-aa85-dd87d6cdbbcb.gif"/>
 
   With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with config file on following path:
     * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
@@ -90,9 +101,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 ## 🔗 URLs
 To play and enjoy your free IPTV you need 2 URLs:
 1) Your generated **master playlist**: 🔗 http://127.0.0.1:6363/ustvgo.m3u8
-2) **TV Guide** (content updates twice an hour):
-    * 🔗 [XML EPG for IPTV players with light UI theme](https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-light-bg.xml)
-    * 🔗 [XML EPG for IPTV players with dark UI theme](https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml)
+2) **TV Guide** (content updates twice an hour): 🔗 http://127.0.0.1:6363/tvguide.xml
 
 ## ▶️ Players
   Here is a **list** of popular IPTV players.
@@ -159,7 +168,7 @@ To play and enjoy your free IPTV you need 2 URLs:
     - **Play**
       ```
       1) Settings -> Dashboard -> Live TV -> Tuner Devices -> Add -> M3U Tuner -> URL -> http://127.0.0.1:6363/ustvgo.m3u8
-      2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-dark-bg.xml
+      2) Settings -> Dashboard -> Live TV -> TV Guide Data Providers -> Add -> XMLTV -> URL -> http://127.0.0.1:6363/tvguide.xml
       3) Settings -> Dashboard -> Scheduled Tasks -> Live TV -> Refresh Guide -> Task Triggers -> "Every 30 minutes"
       ```
     - **Note**
@@ -178,7 +187,7 @@ To play and enjoy your free IPTV you need 2 URLs:
     - **Play**
       ```
       1) Add via URL -> http://127.0.0.1:6363/ustvgo.m3u8
-      2) Settings -> EPG Url -> https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master/ustvgo.for-light-bg.xml.gz
+      2) Settings -> EPG Url -> http://127.0.0.1:6363/tvguide.xml.gz
       ```
 
 ## 👍 Support
