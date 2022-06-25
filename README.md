@@ -81,9 +81,10 @@ Two iconsets for IPTV players with light and dark backgrounds
 - **Uncompressed TV Guide**
 
   Some IPTV players can automatically grab TV Gude from m3u8 playlists. For the URL they look at `url-tvg` attribute.
-  By default it has link to compressed version of TV Guide: `#EXTM3U url-tvg="http://127.0.0.1:6363/tvguide.xml.gz" refresh="1800"`.
   
-  You can change it to uncompressed `"http://127.0.0.1:6363/tvguide.xml"`
+  By default it has link to **compressed** version of TV Guide: `#EXTM3U url-tvg="http://127.0.0.1:6363/tvguide.xml.gz" refresh="1800"`.
+  
+  You can change it to uncompressed `http://127.0.0.1:6363/tvguide.xml`
   with option **`--use-uncompressed-tvguide`**
   ```
   ustvgo-iptv --use-uncompressed-tvguide
@@ -93,7 +94,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 
   <img alt="USTVGO-IPTV GUI screencast" src="https://user-images.githubusercontent.com/20641837/175779405-1076a072-0c58-4264-aa85-dd87d6cdbbcb.gif"/>
 
-  With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with config file on following path:
+  With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with **config file** on following path:
     * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
     * **Mac**: ~/Library/Application Support/ustvgo-iptv/settings.cfg
     * **Windows**: C:\Users\\%USERPROFILE%\AppData\Local\ustvgo-iptv\settings.cfg
