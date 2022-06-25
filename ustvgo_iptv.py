@@ -417,7 +417,10 @@ def main() -> None:
     parser = args_parser()
     args = parser.parse_args()
 
-    asyncio.run(playlist_server(**vars(args)))
+    try:
+        asyncio.run(playlist_server(**vars(args)))
+    except KeyboardInterrupt:
+        logger.info('Server shutdown.')
 
 
 if __name__ == '__main__':
