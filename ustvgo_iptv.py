@@ -27,6 +27,8 @@ Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
                                 'name': str, 'category': str, 'language': str,
                                 'stream_url': furl})
 
+# Fix for https://github.com/pyinstaller/pyinstaller/issues/1113
+''.encode('idna')
 
 # Usage:
 # ./ustvgo_iptv.py
@@ -48,7 +50,10 @@ logger = logging.getLogger(__name__)
 
 def root_dir() -> pathlib.Path:
     """Root directory."""
-    return pathlib.Path(__file__).parent
+    if hasattr(sys, '_MEIPASS'):
+        return pathlib.Path(sys._MEIPASS)  # type: ignore
+    else:
+        return pathlib.Path(__file__).parent
 
 
 def load_dict(filename: str) -> Any:
@@ -339,7 +344,7 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
     app.router.add_get('/tvguide.xml', tvguide_handler)  # tvguide
     app.router.add_get('/tvguide.xml.gz', tvguide_handler)  # tvguide compressed
     app.router.add_get('/logos/{filename:[^/]+}', logos_handler)  # logos
-    app.router.add_route('*', '/{stream_id}{tail:/.*}', stream_handler)  # proxy
+    app.router.add_route('*', '/{stream_id}{tail:/.*}', stream_handler)  # stream
 
     runner = web.AppRunner(app)
     try:
