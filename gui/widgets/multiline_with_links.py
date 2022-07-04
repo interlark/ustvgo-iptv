@@ -42,8 +42,12 @@ class MultilineWithLinks(sg.Multiline):  # type: ignore
                         self.widget.tag_bind(url, '<Button-1>', lambda e: webbrowser.open(url))
 
                         # Change links hover color
-                        # self.widget.tag_bind(url, '<Enter>', lambda e: self.widget.tag_configure(url, foreground='red', underline=True))
-                        # self.widget.tag_bind(url, '<Leave>', lambda e: self.widget.tag_configure(url, foreground='blue', underline=True))
+                        # self.widget.tag_bind(url, '<Enter>',
+                        #                      lambda e: self.widget.tag_configure(
+                        #                          url, foreground='red', underline=True))
+                        # self.widget.tag_bind(url, '<Leave>',
+                        #                      lambda e: self.widget.tag_configure(
+                        #                          url, foreground='blue', underline=True))
 
                     tags = ['hyperlink', url]
                     if background_color_for_value:
