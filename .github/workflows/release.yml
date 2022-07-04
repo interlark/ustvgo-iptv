@@ -94,8 +94,8 @@ jobs:
     - name: Get the version
       id: get_version
       run: |
-        echo ::set-output name=version::$(cat ustvgo_iptv.py \
-        | grep  "^VERSION = '\([0-9.]\+\)'" | grep -o "[0-9.]\+")
+        echo ::set-output name=version::$(python -m pip freeze \
+        | grep ustvgo-iptv | awk -F '==' '{print $2}')
       shell: bash
 
     - uses: actions/download-artifact@v3
