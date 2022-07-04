@@ -28,11 +28,22 @@ jobs:
       with:
         ref: gui
 
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python -m pip install -r requirements-dev.txt
+
     - name: Get the version
       id: get_version
       run: |
-        echo ::set-output name=version::$(cat ustvgo_iptv.py \
-        | grep  "^VERSION = '\([0-9.]\+\)'" | grep -o "[0-9.]\+")
+        echo ::set-output name=version::$(python -m pip freeze \
+        | grep ustvgo-iptv | awk -F '==' '{print $2}')
       shell: bash
 
     - name: Get the tag
@@ -46,17 +57,6 @@ jobs:
       with:
         script: |
             core.setFailed('tag and version are not equivalent!')
-
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
-        python -m pip install -r requirements-dev.txt
 
     - name: Build standalone app
       run: |
