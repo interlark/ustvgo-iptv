@@ -6,4 +6,4 @@ per-file-ignores =
 exclude =
     venv
     venv_gui
-    buid
+    build
