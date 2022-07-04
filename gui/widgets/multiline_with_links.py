@@ -18,7 +18,7 @@ class MultilineWithLinks(sg.Multiline):  # type: ignore
                autoscroll: bool | None = None, justification: str | None = None,
                font_for_value: Union[str, tuple[str, int]] | None = None) -> None:
         if 'url' not in self.tags:
-            # Add url tag for common link styling
+            # Add URL tag for common link styling
             self.tags.add('hyperlink')
             self.widget.tag_configure('hyperlink', foreground='blue', underline=True)
 
@@ -75,7 +75,7 @@ class MultilineWithLinks(sg.Multiline):  # type: ignore
         menu.bind('<FocusOut>', lambda e: menu.unpost())
 
         def show_menu_handler(event: tk.Event[Any]) -> None:
-            """Link menu."""
+            """Link menu handler."""
             menu.post(event.x_root, event.y_root)
             menu.focus_set()
 

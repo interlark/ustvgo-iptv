@@ -14,7 +14,6 @@ from .settings import load_settings, save_settings
 from .utils import patch_tqdm, setup_text_widget
 from .widgets import MultilineLog
 
-
 logger = logging.getLogger('ustvgo_iptv')
 
 
