@@ -92,7 +92,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 
 - **GUI**
 
-  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/176740876-83fc3172-5c49-49b0-858c-c7b1ad7d1dd3.png"/>
+  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/177174497-0e47e52d-1657-45b1-ade4-ec873c1226e3.png"/>
 
   With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with **config file** on following path:
     * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
