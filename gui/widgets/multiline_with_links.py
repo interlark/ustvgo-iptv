@@ -35,11 +35,15 @@ class MultilineWithLinks(sg.Multiline):  # type: ignore
                 else:
                     # Add hyperlink
                     url = text_chunk
-                    if url not in self.widget.tag_names():
+                    if url not in self.tags:
                         self.tags.add(url)
                         rclick_event_name = '<Button-2>' if sg.running_mac() else '<Button-3>'
                         self.widget.tag_bind(url, rclick_event_name, self.context_menu_factory(url))
                         self.widget.tag_bind(url, '<Button-1>', lambda e: webbrowser.open(url))
+
+                        # Change links hover color
+                        # self.widget.tag_bind(url, '<Enter>', lambda e: self.widget.tag_configure(url, foreground='red', underline=True))
+                        # self.widget.tag_bind(url, '<Leave>', lambda e: self.widget.tag_configure(url, foreground='blue', underline=True))
 
                     tags = ['hyperlink', url]
                     if background_color_for_value:
