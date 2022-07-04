@@ -17,7 +17,7 @@ class MultilineWithLinks(sg.Multiline):  # type: ignore
                background_color_for_value: str | None = None, visible: bool | None = None,
                autoscroll: bool | None = None, justification: str | None = None,
                font_for_value: Union[str, tuple[str, int]] | None = None) -> None:
-        if 'url' not in self.tags:
+        if 'hyperlink' not in self.tags:
             # Add URL tag for common link styling
             self.tags.add('hyperlink')
             self.widget.tag_configure('hyperlink', foreground='blue', underline=True)
