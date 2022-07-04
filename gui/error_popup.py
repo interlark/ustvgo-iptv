@@ -3,7 +3,7 @@ import textwrap
 import PySimpleGUI as sg
 
 
-def error_popup(error_msg):
+def error_popup(error_msg: str) -> None:
     """Run error modal window.
 
     Args:

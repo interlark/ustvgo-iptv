@@ -5,7 +5,7 @@ import pathlib
 import PySimpleGUI as sg
 
 
-def config_path():
+def config_path() -> pathlib.Path:
     """Get user path depending on running OS.
     Note:
         Possible path location depending on running OS:
@@ -18,7 +18,7 @@ def config_path():
 
         CSIDL_LOCAL_APPDATA = 28
         buf = ctypes.create_unicode_buffer(1024)
-        ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_LOCAL_APPDATA, None, 0, buf)
+        ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_LOCAL_APPDATA, None, 0, buf)  # type: ignore
         path = buf.value
     elif sg.running_mac():
         path = os.path.expanduser('~/Library/Application Support')
@@ -29,7 +29,7 @@ def config_path():
     return pathlib.Path(path)
 
 
-def image_data(filename):
+def image_data(filename: str) -> bytes:
     """Get image data `basename`.`ext`."""
     images_path = pathlib.Path(__file__).parent / 'icons'
     for file_path in images_path.iterdir():

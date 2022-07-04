@@ -1,12 +1,15 @@
+from __future__ import annotations
+
 import argparse
 import json
+from typing import Any
 
-from ustvgo_iptv import args_parser
+import ustvgo_iptv
 
 from .paths import config_path
 
 
-def save_settings(settings):
+def save_settings(settings: dict[str, Any]) -> None:
     """Save user settings."""
     settings_path = config_path() / 'settings.cfg'
     settings_path.parent.mkdir(parents=True, exist_ok=True)
@@ -14,7 +17,7 @@ def save_settings(settings):
         json.dump(settings, f, ensure_ascii=False, indent=4)
 
 
-def load_settings():
+def load_settings() -> dict[str, Any]:
     """Load user settings."""
     settings = default_settings()
     settings_path = config_path() / 'settings.cfg'
@@ -27,8 +30,8 @@ def load_settings():
     return settings
 
 
-def default_settings():
+def default_settings() -> dict[str, Any]:
     """Get default settings."""
-    parser = args_parser()
+    parser = ustvgo_iptv.args_parser()
     return {x.dest: x.default for x in parser._actions
             if x.default != argparse.SUPPRESS}

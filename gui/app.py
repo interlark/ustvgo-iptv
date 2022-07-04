@@ -1,16 +1,24 @@
+from __future__ import annotations
+
 import asyncio
-import queue
+import logging
+import tkinter as tk
+from typing import Any, Awaitable
 
 import PySimpleGUI as sg
-from ustvgo_iptv import VERSION, logger, playlist_server, tqdm
+import ustvgo_iptv
 
 from .error_popup import error_popup
 from .paths import image_data
 from .settings import load_settings, save_settings
-from .utils import patch_tqdm, setup_gui_logger, setup_text_widget
+from .utils import patch_tqdm, setup_text_widget
+from .widgets import MultilineLog
 
 
-async def app():
+logger = logging.getLogger('ustvgo_iptv')
+
+
+async def app() -> None:
     # Load settings
     settings = load_settings()
 
@@ -39,7 +47,7 @@ async def app():
         [
             sg.Frame('Log', expand_x=True, expand_y=True, layout=[
                 [
-                    sg.Multiline(key='-LOG-', size=(61, 15), expand_x=True, autoscroll=True,
+                    MultilineLog(key='-LOG-', size=(61, 15), expand_x=True, autoscroll=True,
                                  reroute_stdout=True, reroute_stderr=True, echo_stdout_stderr=True),
                 ],
             ]),
@@ -66,7 +74,7 @@ async def app():
     ]
 
     # Main window
-    window = sg.Window(f'USTVGO IPTV v{VERSION}', layout, auto_size_text=True,
+    window = sg.Window(f'USTVGO IPTV v{ustvgo_iptv.VERSION}', layout, auto_size_text=True,
                        finalize=True, font='Any 12')
 
     # Setup text widgets
@@ -79,37 +87,15 @@ async def app():
     for key in ('-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-', '-LBL_PORT-'):
         window[key].widget.config(disabledforeground='snow3')
 
-    # Forbid user to edit output console,
-    # block any keys except ctl+c, ←, ↑, →, ↓
-    def log_key_handler(e):
-        if e.char == '\x03' or e.keysym in ('Left', 'Up', 'Right', 'Down'):
-            return None
-
-        return 'break'
-
-    window['-LOG-'].widget.bind('<Key>', log_key_handler)
-
-    # Enable logging queue to be able to handle logs in the mainloop
-    log_queue = queue.Queue()  # Queue of log messages (log_level, log_message)
-    setup_gui_logger(log_queue)
-
-    # Set log background colors by level
-    log_colors = dict(CRITICAL='tomato1', ERROR='tomato1', WARNING='tan1')
-
-    # Pre-define log tags
-    for color in log_colors.values():
-        tag = f'Multiline(None,{color},None)'
-        window['-LOG-'].tags.add(tag)
-        window['-LOG-'].widget.tag_configure(tag, background=color)
-
-    # Keep selection tag priority on top
-    window['-LOG-'].widget.tag_raise('sel')
+    # Attach app loggers
+    window['-LOG-'].attach_logger(logger)
+    window['-LOG-'].attach_logger(logging.getLogger('aiohttp.access'))
 
     # Patch tqdm to show progress on GUI
-    patch_tqdm(tqdm, window)
+    patch_tqdm(ustvgo_iptv.ustvgo_iptv.tqdm, window)
 
     # Sync params between window controls and settings
-    def sync_settings(verbose=True):
+    def sync_settings(verbose: bool = True) -> bool:
         try:
             settings['port'] = int(window['-IN_PORT-'].get())
         except ValueError:
@@ -122,7 +108,7 @@ async def app():
         return True
 
     # Controls locking during background tasks running
-    def lock_controls(state=True):
+    def lock_controls(state: bool = True) -> None:
         try:
             window['-LBL_PORT-'].widget.configure(state='disabled' if state else 'normal')
 
@@ -131,11 +117,11 @@ async def app():
 
             window['-BTN_STOP-'].update(visible=state)
             window['-BTN_START-'].update(visible=not state)
-        except sg.tk.TclError:
+        except tk.TclError:
             pass  # Main window could be already destroyed by sg
 
     # Background tasks wrapper for restoring state
-    async def background_task_finished(coro):
+    async def background_task_finished(coro: Awaitable[Any]) -> None:
         try:
             await coro
         except asyncio.CancelledError:
@@ -146,10 +132,10 @@ async def app():
         lock_controls(state=False)
 
     # Running background task
-    background_task = None
+    background_task: asyncio.Future[Any] | None = None
 
     # coro wrapper for window events reading
-    async def read_window():
+    async def read_window() -> Any:
         return window.read(timeout=50)
 
     # Main loop
@@ -163,7 +149,7 @@ async def app():
                 await background_task
             break
 
-        # Click Start
+        # Click "Start"
         elif event == '-BTN_START-':
             if not sync_settings():
                 continue
@@ -173,11 +159,11 @@ async def app():
             loop = asyncio.get_running_loop()
             background_task = loop.create_task(
                 background_task_finished(
-                    playlist_server(**settings)
+                    ustvgo_iptv.playlist_server(**settings)
                 )
             )
 
-        # Click Cancel
+        # Click "Cancel"
         elif event == '-BTN_STOP-':
             if background_task:
                 background_task.cancel()
@@ -187,26 +173,8 @@ async def app():
             n, total = values['@PROGRESS_UPDATE']
             window['-PROGRESSBAR-'].update(current_count=n, max=total)
 
-        # Poll log queue
-        while True:
-            try:
-                log_level, log_msg = log_queue.get(block=False)
-            except queue.Empty:
-                break
-            else:
-                # Print message to log
-                window['-LOG-'].update(
-                    log_msg, append=True,
-                    background_color_for_value=log_colors.get(log_level, None)
-                )
-
     # Save settings before exit
     sync_settings(verbose=False)
     save_settings(settings)
 
     window.close()
-
-
-def main() -> None:
-    """Entry point."""
-    asyncio.run(app())

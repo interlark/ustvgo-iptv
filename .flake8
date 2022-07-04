@@ -3,3 +3,7 @@ max-line-length = 110
 per-file-ignores =
     # module imported but unused
     __init__.py:F401,
+exclude =
+    venv
+    venv_gui
+    buid

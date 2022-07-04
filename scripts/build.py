@@ -10,10 +10,12 @@ SCRIPT_DIR = pathlib.Path(__file__).parent
 ROOT_DIR = SCRIPT_DIR.parent
 CLEANUP = True
 
+
+# Target filename
+dist_filename = 'ustvgo-iptv'
+
 try:
-    # Target filename
-    dist_filename = 'ustvgo-iptv'
-    src_path = ROOT_DIR / 'ustvgo_iptv.py'
+    src_path = ROOT_DIR / 'main.py'
 
     # Dist
     build_cmd = [
@@ -36,9 +38,13 @@ try:
 
     # Add data
     build_cmd += [
-        '--add-data', f'{ROOT_DIR}/channels.json{os.pathsep}.',
         '--add-data', f'{ROOT_DIR}/gui/icons{os.pathsep}gui/icons',
     ]
+
+    # USTVGO-IPTV fix
+    ustvgo_iptv_channels = pathlib.Path(
+        __import__('ustvgo_iptv').__file__
+    ).parent / 'channels.json'
 
     # Furl fix
     orderedmultidict_version_file = pathlib.Path(
@@ -47,6 +53,7 @@ try:
 
     build_cmd += [
         '--add-data', f'{orderedmultidict_version_file}{os.pathsep}./orderedmultidict',
+        '--add-data', f'{ustvgo_iptv_channels}{os.pathsep}.',
     ]
 
     # Source script
