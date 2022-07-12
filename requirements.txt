@@ -1,7 +1,2 @@
 git+https://github.com/interlark/ustvgo-iptv@master
-aiohttp>=3.8.1
-tqdm>=4.64.0
 PySimpleGUI==4.60.0
-netifaces>=0.11.0
-furl==2.1.3
-typing_extensions >= 3.7.4; python_version<"3.8"
