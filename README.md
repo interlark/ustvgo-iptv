@@ -191,6 +191,49 @@ To play and enjoy your free IPTV you need 2 URLs:
       2) Settings -> EPG Url -> http://127.0.0.1:6363/tvguide.xml.gz
       ```
 
+
+## ⏰ Autostart
+You can use **systemd** on Linux-based servers to automatically run **ustvgo-iptv** on start-ups.
+
+1. Get full path to `ustvgo-iptv`
+   ```bash
+   $ which ustvgo-iptv
+   ```
+   ```bash
+   /home/USERNAME/.local/bin/ustvgo-iptv
+   ```
+
+2. Create systemd service file with following text
+   ```bash
+   $ sudo nano /etc/systemd/system/ustvgo.service
+   ```
+
+   ```ini
+   [Unit]
+   Description=USTVGO Free IPTV
+   After=network.target
+
+   [Service]
+   User=USERNAME
+   Type=notify
+   Restart=always
+   ExecStart=/home/USERNAME/.local/bin/ustvgo-iptv
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+3. Set permissions and enable the service
+   ```bash
+   $ sudo chmod 644 /etc/systemd/system/ustvgo.service
+   $ sudo systemctl enable ustvgo.service
+   ```
+
+4. Reboot
+
+Don't forget to replace `USERNAME` with your actual username.
+
+
 ## 👍 Support
 - [ustvgo.tv](https://ustvgo.tv) is wonderful project which can offer you a free IPTV, please support these guys buying VPN with their [referral link](https://ustvgo.tv/vpn). With VPN you can watch even more of their channels, like extra 25 or so.
 
