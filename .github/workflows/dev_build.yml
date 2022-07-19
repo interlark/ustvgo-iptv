@@ -1,0 +1,70 @@
+name: Development Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Development Build
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            dist: linux
+
+          - os: macos-10.15
+            dist: macos
+
+          - os: windows-2019
+            dist: windows
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: gui
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python -m pip install -r requirements-dev.txt
+
+    - name: Get master short SHA
+      id: get_master_sha
+      run: echo "::set-output name=master_sha_short::$(git rev-parse origin/master | cut -c1-7)"
+      shell: bash
+
+    - name: Get GUI short SHA
+      id: get_gui_sha
+      run: echo "::set-output name=gui_sha_short::$(git rev-parse origin/gui | cut -c1-7)"
+      shell: bash
+
+    - name: Build standalone app
+      run: |
+        python scripts/build.py
+
+    - name: Archive Windows distributive
+      if: matrix.dist == 'windows'
+      run: pushd dist && 7z a ../ustvgo-iptv-dev_build-${{steps.get_master_sha.outputs.master_sha_short}}_${{steps.get_gui_sha.outputs.gui_sha_short}}-${{matrix.dist}}.zip ustvgo-iptv.exe && popd
+      shell: bash
+
+    - name: Archive Linux/MacOS distributive
+      if: matrix.dist != 'windows'
+      run: tar -C dist/ -czvf ustvgo-iptv-dev_build-${{steps.get_master_sha.outputs.master_sha_short}}_${{steps.get_gui_sha.outputs.gui_sha_short}}-${{matrix.dist}}.tar.gz ustvgo-iptv
+      shell: bash
+
+    - name: Upload distributive
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist-${{ matrix.dist }}
+        path: ustvgo-iptv-*
+        retention-days: 30

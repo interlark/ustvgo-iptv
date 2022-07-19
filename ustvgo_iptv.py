@@ -98,14 +98,16 @@ async def retrieve_stream_url(channel: Channel, max_retries: int = 5) -> Optiona
 
     while True:
         try:
-            async with aiohttp.ClientSession(headers=USTVGO_HEADERS, raise_for_status=True) as session:
-                async with session.get(url=url, timeout=timeout) as response:
-                    resp_html = await response.text()
-                    match = re.search(r'hls_src=["\'](?P<stream_url>[^"\']+)', resp_html)
-                    if match:
-                        channel['stream_url'] = furl(match.group('stream_url'))
-                        return channel
-                    return None
+            async with aiohttp.TCPConnector(ssl=False) as connector:
+                async with aiohttp.ClientSession(headers=USTVGO_HEADERS, raise_for_status=True,
+                                                 connector=connector) as session:
+                    async with session.get(url=url, timeout=timeout) as response:
+                        resp_html = await response.text()
+                        match = re.search(r'hls_src=["\'](?P<stream_url>[^"\']+)', resp_html)
+                        if match:
+                            channel['stream_url'] = furl(match.group('stream_url'))
+                            return channel
+                        return None
         except Exception as e:
             is_exc_valid = any([isinstance(e, exc) for exc in exceptions])
             if not is_exc_valid:
@@ -182,13 +184,16 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         color_scheme = 'for-light-bg' if icons_for_light_bg else 'for-dark-bg'
         logo_url = (furl(tvguide_base_url) / 'images/icons/channels' /
                     color_scheme / request.match_info.get('filename')).url
-        async with aiohttp.request(method=request.method, url=logo_url) as response:
-            content = await response.read()
 
-            return web.Response(
-                body=content, status=response.status,
-                content_type='image/png'
-            )
+        async with aiohttp.TCPConnector(ssl=False, force_close=True) as connector:
+            async with aiohttp.request(method=request.method, url=logo_url,
+                                       connector=connector) as response:
+                content = await response.read()
+
+                return web.Response(
+                    body=content, status=response.status,
+                    content_type='image/png'
+                )
 
     async def tvguide_handler(request: web.Request) -> web.Response:
         """TV Guide handler."""
@@ -198,14 +203,16 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         tvguide_filename = f'ustvgo.{color_scheme}.xml{compressed_ext}'
         tvguide_url = furl(tvguide_base_url).add(path=tvguide_filename).url
 
-        async with aiohttp.request(method=request.method, url=tvguide_url) as response:
-            content = await response.read()
-            content_type = 'application/gzip' if is_compressed else 'application/xml'
+        async with aiohttp.TCPConnector(ssl=False, force_close=True) as connector:
+            async with aiohttp.request(method=request.method, url=tvguide_url,
+                                       connector=connector) as response:
+                content = await response.read()
+                content_type = 'application/gzip' if is_compressed else 'application/xml'
 
-            return web.Response(
-                body=content, status=response.status,
-                content_type=content_type
-            )
+                return web.Response(
+                    body=content, status=response.status,
+                    content_type=content_type
+                )
 
     async def stream_handler(request: web.Request) -> web.Response:
         """Stream handler."""
@@ -229,22 +236,22 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
             ).tostr(query_dont_quote='=')
 
             try:
-                async with aiohttp.request(
-                    method=request.method, url=url,
-                    params=request.query, data=data,
-                    headers=headers, raise_for_status=True
-                ) as response:
+                async with aiohttp.TCPConnector(ssl=False, force_close=True) as connector:
+                    async with aiohttp.request(
+                        method=request.method, url=url, params=request.query, data=data,
+                        headers=headers, raise_for_status=True, connector=connector
+                    ) as response:
 
-                    content = await response.read()
-                    headers = {name: value for name, value in response.headers.items()
-                               if name not in
-                               (aiohttp.hdrs.CONTENT_ENCODING, aiohttp.hdrs.CONTENT_LENGTH,
-                                aiohttp.hdrs.TRANSFER_ENCODING, aiohttp.hdrs.CONNECTION)}
+                        content = await response.read()
+                        headers = {name: value for name, value in response.headers.items()
+                                   if name not in
+                                   (aiohttp.hdrs.CONTENT_ENCODING, aiohttp.hdrs.CONTENT_LENGTH,
+                                    aiohttp.hdrs.TRANSFER_ENCODING, aiohttp.hdrs.CONNECTION)}
 
-                    return web.Response(
-                        body=content, status=response.status,
-                        headers=headers
-                    )
+                        return web.Response(
+                            body=content, status=response.status,
+                            headers=headers
+                        )
             except aiohttp.ClientResponseError as e:
                 if retry >= max_retries:
                     return web.Response(text=e.message, status=e.status)
