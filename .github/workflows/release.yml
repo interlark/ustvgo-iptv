@@ -103,6 +103,7 @@ jobs:
     - uses: ncipollo/release-action@v1.10.0
       with:
         name: GUI v${{ steps.get_version.outputs.version }}
+        draft: true
         artifacts: "dist-*/*"
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
