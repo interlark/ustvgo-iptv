@@ -212,11 +212,13 @@ You can use **systemd** on Linux-based servers to automatically run **ustvgo-ipt
    [Unit]
    Description=USTVGO Free IPTV
    After=network.target
+   StartLimitInterval=0
 
    [Service]
    User=USERNAME
-   Type=notify
+   Type=simple
    Restart=always
+   RestartSec=5
    ExecStart=/home/USERNAME/.local/bin/ustvgo-iptv
 
    [Install]
