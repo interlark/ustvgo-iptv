@@ -38,7 +38,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 
   You can download GUI app from [Releases](https://github.com/interlark/ustvgo-iptv/releases/latest) for your OS.
 
-## ⚙️ Usage
+## ⚙️ Usage - CLI
 
 - **Basic usage**
 
@@ -90,14 +90,15 @@ Two iconsets for IPTV players with light and dark backgrounds
   ustvgo-iptv --use-uncompressed-tvguide
   ```
 
-- **GUI**
+## ⚙️ Usage - GUI
 
   <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/177174497-0e47e52d-1657-45b1-ade4-ec873c1226e3.png"/>
 
   With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with **config file** on following path:
-    * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
-    * **Mac**: ~/Library/Application Support/ustvgo-iptv/settings.cfg
-    * **Windows**: C:\Users\\%USERPROFILE%\AppData\Local\ustvgo-iptv\settings.cfg
+
+  * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
+  * **Mac**: ~/Library/Application Support/ustvgo-iptv/settings.cfg
+  * **Windows**: C:\Users\\%USERPROFILE%\AppData\Local\ustvgo-iptv\settings.cfg
 
 ## 🔗 URLs
 To play and enjoy your free IPTV you need 2 URLs:
@@ -190,7 +191,6 @@ To play and enjoy your free IPTV you need 2 URLs:
       1) Add via URL -> http://127.0.0.1:6363/ustvgo.m3u8
       2) Settings -> EPG Url -> http://127.0.0.1:6363/tvguide.xml.gz
       ```
-
 
 ## ⏰ Autostart
 You can use **systemd** on Linux-based servers to automatically run **ustvgo-iptv** on start-ups.
