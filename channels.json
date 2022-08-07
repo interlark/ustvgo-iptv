@@ -625,6 +625,14 @@
     },
     {
         "id": 79,
+        "stream_id": "Reelz",
+        "tvguide_id": "9200011769",
+        "name": "Reelz",
+        "category": "Entertainment",
+        "language": "en"
+    },
+    {
+        "id": 80,
         "stream_id": "Science",
         "tvguide_id": "9200019847",
         "name": "Science",
@@ -632,7 +640,7 @@
         "language": "en"
     },
     {
-        "id": 80,
+        "id": 81,
         "stream_id": "SECN",
         "tvguide_id": "9233002484",
         "name": "SEC Network",
@@ -640,7 +648,7 @@
         "language": "en"
     },
     {
-        "id": 81,
+        "id": 82,
         "stream_id": "Showtime",
         "tvguide_id": "9233011188",
         "name": "Showtime",
@@ -648,7 +656,7 @@
         "language": "en"
     },
     {
-        "id": 82,
+        "id": 83,
         "stream_id": "StarZ",
         "tvguide_id": "9233013809",
         "name": "Starz",
@@ -656,7 +664,7 @@
         "language": "en"
     },
     {
-        "id": 83,
+        "id": 84,
         "stream_id": "SundanceTV",
         "tvguide_id": "9233001687",
         "name": "Sundance TV",
@@ -664,7 +672,7 @@
         "language": "en"
     },
     {
-        "id": 84,
+        "id": 85,
         "stream_id": "SYFY",
         "tvguide_id": "9200004316",
         "name": "Syfy",
@@ -672,7 +680,7 @@
         "language": "en"
     },
     {
-        "id": 85,
+        "id": 86,
         "stream_id": "TBS",
         "tvguide_id": "9233011348",
         "name": "TBS",
@@ -680,7 +688,7 @@
         "language": "en"
     },
     {
-        "id": 86,
+        "id": 87,
         "stream_id": "TCM",
         "tvguide_id": "9200017928",
         "name": "Turner Classic Movies (TCM)",
@@ -688,7 +696,7 @@
         "language": "en"
     },
     {
-        "id": 87,
+        "id": 88,
         "stream_id": "Telemundo",
         "tvguide_id": "9200011857",
         "name": "Telemundo",
@@ -696,7 +704,7 @@
         "language": "es"
     },
     {
-        "id": 88,
+        "id": 89,
         "stream_id": "Tennis",
         "tvguide_id": "9200017917",
         "name": "Tennis Channel",
@@ -704,7 +712,15 @@
         "language": "en"
     },
     {
-        "id": 89,
+        "id": 90,
+        "stream_id": "TeenNick",
+        "tvguide_id": "9200006974",
+        "name": "TeenNick",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 91,
         "stream_id": "TLC",
         "tvguide_id": "9200016249",
         "name": "The Learning Channel (TLC)",
@@ -712,7 +728,7 @@
         "language": "en"
     },
     {
-        "id": 90,
+        "id": 92,
         "stream_id": "TNT",
         "tvguide_id": "9233011830",
         "name": "Turner Network Television (TNT)",
@@ -720,7 +736,7 @@
         "language": "en"
     },
     {
-        "id": 91,
+        "id": 93,
         "stream_id": "Travel",
         "tvguide_id": "9233000035",
         "name": "Travel Channel",
@@ -728,7 +744,7 @@
         "language": "en"
     },
     {
-        "id": 92,
+        "id": 94,
         "stream_id": "TruTV",
         "tvguide_id": "9233015561",
         "name": "truTV",
@@ -736,7 +752,7 @@
         "language": "en"
     },
     {
-        "id": 93,
+        "id": 95,
         "stream_id": "TVLand",
         "tvguide_id": "9233005468",
         "name": "TV Land",
@@ -744,7 +760,7 @@
         "language": "en"
     },
     {
-        "id": 94,
+        "id": 96,
         "stream_id": "TWC",
         "tvguide_id": "9200016258",
         "name": "The Weather Channel",
@@ -752,7 +768,7 @@
         "language": "en"
     },
     {
-        "id": 95,
+        "id": 97,
         "stream_id": "Univision",
         "tvguide_id": "9200000867",
         "name": "Univisión Network",
@@ -760,7 +776,7 @@
         "language": "es"
     },
     {
-        "id": 96,
+        "id": 98,
         "stream_id": "USANetwork",
         "tvguide_id": "9200009133",
         "name": "USA Network",
@@ -768,7 +784,7 @@
         "language": "en"
     },
     {
-        "id": 97,
+        "id": 99,
         "stream_id": "VH1",
         "tvguide_id": "9233000037",
         "name": "VH1",
@@ -776,7 +792,7 @@
         "language": "en"
     },
     {
-        "id": 98,
+        "id": 100,
         "stream_id": "WETV",
         "tvguide_id": "9233003770",
         "name": "We TV",
@@ -784,7 +800,7 @@
         "language": "en"
     },
     {
-        "id": 99,
+        "id": 101,
         "stream_id": "WWE",
         "tvguide_id": "",
         "name": "WWE Network",
@@ -792,7 +808,7 @@
         "language": "en"
     },
     {
-        "id": 100,
+        "id": 102,
         "stream_id": "YES",
         "tvguide_id": "9200004247",
         "name": "YES Network",
