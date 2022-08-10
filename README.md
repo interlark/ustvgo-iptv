@@ -37,6 +37,11 @@ Two iconsets for IPTV players with light and dark backgrounds
 - **GUI**
 
   You can download GUI app from [Releases](https://github.com/interlark/ustvgo-iptv/releases/latest) for your OS.
+- **Docker**
+  ```bash
+  docker run -d --name=ustvgo-iptv -p 6363:6363 --restart unless-stopped ghcr.io/interlark/ustvgo-iptv:latest
+  ```
+  > For dark icons append following argument: `--icons-for-light-bg`
 
 ## ⚙️ Usage - CLI
 
