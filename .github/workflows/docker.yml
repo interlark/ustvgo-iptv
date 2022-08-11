@@ -1,0 +1,55 @@
+name: Build Docker Image
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Build Docker Image
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Get the version
+      id: get_version
+      run: |
+        echo ::set-output name=version::$(cat ustvgo_iptv.py \
+        | grep  "^VERSION = '\([0-9.]\+\)'" | grep -o "[0-9.]\+")
+      shell: bash
+
+    - name: Get the tag
+      id: get_tag
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+      shell: bash
+
+    - name: Version check
+      if: ${{ format('v{0}', steps.get_version.outputs.version) != steps.get_tag.outputs.tag }}
+      uses: actions/github-script@v3
+      with:
+        script: |
+            core.setFailed('tag and version are not equivalent!')
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Image tags
+      run: |
+        tags=()
+        for tag in "latest" "${{ steps.get_version.outputs.version }}"; do
+            tags+=("ghcr.io/${{ github.repository }}:${tag}")
+        done
+        echo "IMAGE_TAGS=$(IFS=,; echo "${tags[*]}")" >> $GITHUB_ENV
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ${{ env.IMAGE_TAGS }}

@@ -64,12 +64,12 @@ jobs:
 
     - name: Archive Windows distributive
       if: matrix.dist == 'windows'
-      run: pushd dist && 7z a ../ustvgo-iptv-${{steps.get_version.outputs.version}}-${{matrix.dist}}.zip  ustvgo-iptv.exe && popd
+      run: pushd dist && 7z a ../ustvgo-iptv-${{ steps.get_version.outputs.version }}-${{ matrix.dist }}.zip  ustvgo-iptv.exe && popd
       shell: bash
 
     - name: Archive Linux/MacOS distributive
       if: matrix.dist != 'windows'
-      run: tar -C dist/ -czvf ustvgo-iptv-${{steps.get_version.outputs.version}}-${{matrix.dist}}.tar.gz ustvgo-iptv
+      run: tar -C dist/ -czvf ustvgo-iptv-${{ steps.get_version.outputs.version }}-${{ matrix.dist }}.tar.gz ustvgo-iptv
       shell: bash
 
     - name: Upload distributive
