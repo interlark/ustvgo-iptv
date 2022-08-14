@@ -116,7 +116,7 @@ async def app() -> None:
                 settings[arg_name] = value
             except ValueError:
                 if verbose:
-                    error_popup(f'Incorrect "{arg_name}" integer value "{value_str}"')
+                    error_popup(f'Incorrect integer value "{value_str}" for "{arg_name}"')
                 return False
 
         settings['use_uncompressed_tvguide'] = window['-CHECK_UNCOMPRESSED_TVGUIDE-'].get()
