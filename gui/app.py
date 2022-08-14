@@ -109,11 +109,14 @@ async def app() -> None:
     def sync_settings(verbose: bool = True) -> bool:
         for arg_name in ('port', 'parallel'):
             try:
-                value = window[f'-IN_{arg_name.upper()}-'].get()
-                settings[arg_name] = int(value)
+                value_str = window[f'-IN_{arg_name.upper()}-'].get()
+                value_ = int(value_str)
+                if value_ <= 0:
+                    raise ValueError
+                settings[arg_name] = value_
             except ValueError:
                 if verbose:
-                    error_popup(f'Incorrect "{arg_name}" integer value "{value}"')
+                    error_popup(f'Incorrect "{arg_name}" integer value "{value_str}"')
                 return False
 
         settings['use_uncompressed_tvguide'] = window['-CHECK_UNCOMPRESSED_TVGUIDE-'].get()
