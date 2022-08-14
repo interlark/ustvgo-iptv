@@ -33,7 +33,8 @@ async def app() -> None:
             sg.Frame('Options', expand_x=True, expand_y=True, layout=[
                 [
                     sg.Column([[
-                        sg.Checkbox(text='Icons for light background', default=settings['icons_for_light_bg'],
+                        sg.Checkbox(text='Icons for light background',
+                                    default=settings['icons_for_light_bg'],
                                     key='-CHECK_ICONS_FOR_LIGHT_BG-', expand_x=True,
                                     tooltip='Switch to dark iconset for players with light UI'),
                         sg.Checkbox(text='Access logs', default=settings['access_logs'],
@@ -47,7 +48,8 @@ async def app() -> None:
                 ],
                 [
                     sg.Column([[
-                        sg.Checkbox(text='Uncompressed TV Guide', default=settings['use_uncompressed_tvguide'],
+                        sg.Checkbox(text='Uncompressed TV Guide',
+                                    default=settings['use_uncompressed_tvguide'],
                                     key='-CHECK_UNCOMPRESSED_TVGUIDE-', expand_x=True,
                                     tooltip='Use uncompressed TV Guide in master playlist'),
                         sg.Column([[
