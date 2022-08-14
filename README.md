@@ -45,8 +45,6 @@ Two iconsets for IPTV players with light and dark backgrounds
 
 ## ⚙️ Usage - CLI
 
-- **Basic usage**
-
   To generate master playlist, you could simple run app without any arguments.
   ```
   ustvgo-iptv
@@ -55,45 +53,13 @@ Two iconsets for IPTV players with light and dark backgrounds
   <img alt="USTVGO-IPTV CLI screencast" width="666" src="https://user-images.githubusercontent.com/20641837/175779375-9a1a2525-b7ab-4d7f-90e9-b9e585e93902.gif"/>
 
 
-- **Iconset**
-
-  By default channel icons are adapted for **dark backgrounds**, in case your IPTV player have light UI theme you can switch iconset to appropriate with following option **`--icons-for-light-bg`**
-  ```
-  ustvgo-iptv --icons-for-light-bg
-  ```
-
-- **Access logs**
-
-  To enable access logs for tracking requests activity use option **`--access-logs`**
-  ```
-  ustvgo-iptv --access-logs
-  ```
-
-- **Server port**
-
-  By default the port is **6363**. You can change it with option **`--port`**
-  ```
-  ustvgo-iptv --port 1234
-  ```
-
-- **Parallel requests**
-
-  When server starts it initiate collecting stream URLs for master playlist using **10** parallel requests. You can specify number of parallel requests with option **`--parallel`**
-  ```
-  ustvgo-iptv --parallel 12
-  ```
-  
-- **Uncompressed TV Guide**
-
-  Some IPTV players can automatically grab TV Gude from m3u8 playlists. For the URL they look at `url-tvg` attribute.
-  
-  By default it has link to **compressed** version of TV Guide: `#EXTM3U url-tvg="http://127.0.0.1:6363/tvguide.xml.gz" refresh="1800"`.
-  
-  You can change it to uncompressed `http://127.0.0.1:6363/tvguide.xml`
-  with option **`--use-uncompressed-tvguide`**
-  ```
-  ustvgo-iptv --use-uncompressed-tvguide
-  ```
+| Optional argument                  | Description |
+| :---                      |    :----   |
+| --icons-for-light-bg      | Switch to dark iconset for players with light UI.       |
+| --access-logs             | Enable access logs for tracking requests activity.        |
+| --port 6363               | Server port. By default, the port is **6363**.           |
+| --parallel 10             | Number of parallel requests. Default is **10**.          |
+| --use-uncompressed-tvguide| By default, master playlist has a link to **compressed** version of TV Guide:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml.gz"`<br/>With this argument you can switch it to uncompressed:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml"`           |
 
 ## ⚙️ Usage - GUI
 
