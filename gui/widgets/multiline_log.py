@@ -22,8 +22,15 @@ class MultilineLog(MultilineWithLinks):
         self.widget.tag_raise('sel')
 
         # Forbid user to edit output console,
-        # block any keys except ctl+c, ←, ↑, →, ↓
+        # block any keys except Ctrl+C, ←, ↑, →, ↓,
+        # Tab, Shift-Tab
         def log_key_handler(e: tk.Event[Any]) -> str | None:
+            if e.keysym == 'ISO_Left_Tab':
+                e.widget.tk_focusPrev().focus()  # Focus previous
+
+            if e.keysym == 'Tab':
+                e.widget.tk_focusNext().focus()  # Focus next
+
             if e.char == '\x03' or e.keysym in ('Left', 'Up', 'Right', 'Down'):
                 return None
 

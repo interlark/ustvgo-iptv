@@ -91,11 +91,11 @@ async def app() -> None:
 
     # Main window
     window = sg.Window(f'USTVGO IPTV v{ustvgo_iptv.VERSION}', layout, auto_size_text=True,
-                       finalize=True, font='Any 12')
+                       finalize=True, font='Any 12', use_default_focus=False)
 
     # Setup text widgets
     setup_text_widget(window['-LOG-'].widget, window.TKroot,
-                      menu_clear=True, menu_copy=True, menu_github=True, set_focus=True)
+                      menu_clear=True, menu_copy=True, menu_github=True)
     setup_text_widget(window['-IN_PORT-'].widget, window.TKroot,
                       menu_paste=True, menu_cut=True, menu_copy=True, menu_clear=False)
 
@@ -165,7 +165,7 @@ async def app() -> None:
 
     # Finalize custom log element and set focus on it
     window['-LOG-'].finalize()
-    window['-LOG-'].widget.focus_set()
+    window['-LOG-'].widget.focus_force()
 
     # Main loop
     while True:
