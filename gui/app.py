@@ -63,7 +63,7 @@ async def app() -> None:
         [
             sg.Frame('Log', expand_x=True, expand_y=True, layout=[
                 [
-                    MultilineLog(key='-LOG-', size=(61, 15), expand_x=True, autoscroll=True, focus=True,
+                    MultilineLog(key='-LOG-', size=(61, 15), expand_x=True, autoscroll=True,
                                  reroute_stdout=True, reroute_stderr=True, echo_stdout_stderr=True),
                 ],
             ]),
@@ -163,8 +163,9 @@ async def app() -> None:
     async def read_window() -> Any:
         return window.read(timeout=50)
 
-    # Finalize custom log element
+    # Finalize custom log element and set focus on it
     window['-LOG-'].finalize()
+    window['-LOG-'].widget.focus_set()
 
     # Main loop
     while True:
