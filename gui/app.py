@@ -32,25 +32,29 @@ async def app() -> None:
         [
             sg.Frame('Options', expand_x=True, expand_y=True, layout=[
                 [
-                    sg.Checkbox(text='Icons for light background', default=settings['icons_for_light_bg'],
-                                key='-CHECK_ICONS_FOR_LIGHT_BG-', expand_x=True,
-                                tooltip='Switch to dark iconset for players with light UI'),
-                    sg.Checkbox(text='Access logs', default=settings['access_logs'],
-                                key='-CHECK_ACCESS_LOGS-', expand_x=True,
-                                tooltip='Enable access logs for tracking requests activity'),
                     sg.Column([[
-                        sg.Text('Port', key='-LBL_PORT-', tooltip='Server port'),
-                        sg.Input(settings['port'], key='-IN_PORT-', size=(8, 1))
-                    ]], expand_x=True)
+                        sg.Checkbox(text='Icons for light background', default=settings['icons_for_light_bg'],
+                                    key='-CHECK_ICONS_FOR_LIGHT_BG-', expand_x=True,
+                                    tooltip='Switch to dark iconset for players with light UI'),
+                        sg.Checkbox(text='Access logs', default=settings['access_logs'],
+                                    key='-CHECK_ACCESS_LOGS-', expand_x=True,
+                                    tooltip='Enable access logs for tracking requests activity'),
+                        sg.Column([[
+                            sg.Text('Port', key='-LBL_PORT-', tooltip='Server port'),
+                            sg.Input(settings['port'], key='-IN_PORT-', size=(8, 1))
+                        ]], expand_x=True, element_justification='right')
+                    ]], expand_x=True, p=(0, 0)),
                 ],
                 [
-                    sg.Checkbox(text='Uncompressed TV Guide', default=settings['use_uncompressed_tvguide'],
-                                key='-CHECK_UNCOMPRESSED_TVGUIDE-', expand_x=True, p=(5, (0, 6)),
-                                tooltip='Use uncompressed TV Guide in master playlist'),
                     sg.Column([[
-                        sg.Text('Parallel', key='-LBL_PARALLEL-', tooltip='Number of parallel requests'),
-                        sg.Input(settings['parallel'], key='-IN_PARALLEL-', size=(8, 1))
-                    ]], expand_x=True, element_justification='right', p=(40, (0, 6)))
+                        sg.Checkbox(text='Uncompressed TV Guide', default=settings['use_uncompressed_tvguide'],
+                                    key='-CHECK_UNCOMPRESSED_TVGUIDE-', expand_x=True,
+                                    tooltip='Use uncompressed TV Guide in master playlist'),
+                        sg.Column([[
+                            sg.Text('Parallel', key='-LBL_PARALLEL-', tooltip='Number of parallel requests'),
+                            sg.Input(settings['parallel'], key='-IN_PARALLEL-', size=(8, 1))
+                        ]], expand_x=True, element_justification='right')
+                    ]], expand_x=True, p=(0, (0, 5))),
                 ],
             ]),
         ],
