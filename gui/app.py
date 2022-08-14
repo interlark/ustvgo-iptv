@@ -41,6 +41,14 @@ async def app() -> None:
                         sg.Input(settings['port'], key='-IN_PORT-', size=(8, 1))
                     ]], expand_x=True)
                 ],
+                [
+                    sg.Checkbox(text='Uncompressed TV Guide', default=settings['use_uncompressed_tvguide'],
+                                key='-CHECK_UNCOMPRESSED_TVGUIDE-', expand_x=True, p=(5, (0, 6))),
+                    sg.Column([[
+                        sg.Text('Parallel', key='-LBL_PARALLEL-'),
+                        sg.Input(settings['parallel'], key='-IN_PARALLEL-', size=(8, 1))
+                    ]], expand_x=True, element_justification='right', p=(40, (0, 6)))
+                ],
             ]),
         ],
         [
@@ -83,7 +91,8 @@ async def app() -> None:
                       menu_paste=True, menu_cut=True, menu_copy=True, menu_clear=False)
 
     # Set disabled color
-    for key in ('-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-', '-LBL_PORT-'):
+    for key in ('-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-',
+                '-CHECK_UNCOMPRESSED_TVGUIDE-', '-LBL_PORT-', '-LBL_PARALLEL-'):
         window[key].widget.config(disabledforeground='snow3')
 
     # Attach app loggers
@@ -95,13 +104,16 @@ async def app() -> None:
 
     # Sync params between window controls and settings
     def sync_settings(verbose: bool = True) -> bool:
-        try:
-            settings['port'] = int(window['-IN_PORT-'].get())
-        except ValueError:
-            if verbose:
-                error_popup('Incorrect port value')
-            return False
+        for arg_name in ('port', 'parallel'):
+            try:
+                value = window[f'-IN_{arg_name.upper()}-'].get()
+                settings[arg_name] = int(value)
+            except ValueError:
+                if verbose:
+                    error_popup(f'Incorrect "{arg_name}" integer value "{value}"')
+                return False
 
+        settings['use_uncompressed_tvguide'] = window['-CHECK_UNCOMPRESSED_TVGUIDE-'].get()
         settings['icons_for_light_bg'] = window['-CHECK_ICONS_FOR_LIGHT_BG-'].get()
         settings['access_logs'] = window['-CHECK_ACCESS_LOGS-'].get()
         return True
@@ -109,9 +121,11 @@ async def app() -> None:
     # Controls locking during background tasks running
     def lock_controls(state: bool = True) -> None:
         try:
-            window['-LBL_PORT-'].widget.configure(state='disabled' if state else 'normal')
+            for key in ('-LBL_PORT-', '-LBL_PARALLEL-'):
+                window[key].widget.configure(state='disabled' if state else 'normal')
 
-            for key in ('-IN_PORT-', '-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-'):
+            for key in ('-IN_PORT-', '-IN_PARALLEL-', '-CHECK_ICONS_FOR_LIGHT_BG-',
+                        '-CHECK_ACCESS_LOGS-', '-CHECK_UNCOMPRESSED_TVGUIDE-'):
                 window[key].update(disabled=state)
 
             window['-BTN_STOP-'].update(visible=state)
@@ -136,6 +150,9 @@ async def app() -> None:
     # coro wrapper for window events reading
     async def read_window() -> Any:
         return window.read(timeout=50)
+
+    # Finalize custom log element
+    window['-LOG-'].finalize()
 
     # Main loop
     while True:

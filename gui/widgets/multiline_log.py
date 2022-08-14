@@ -11,7 +11,7 @@ from .multiline_with_links import MultilineWithLinks
 class MultilineLog(MultilineWithLinks):
     _log_colors = dict(CRITICAL='tomato1', ERROR='tomato1', WARNING='tan1')
 
-    def _finalize(self) -> None:
+    def finalize(self) -> None:
         # Pre-define color log tags
         for color in self._log_colors.values():
             tag = f'Multiline(None,{color},None)'
@@ -56,7 +56,7 @@ class MultilineLog(MultilineWithLinks):
                autoscroll: bool | None = None, justification: str | None = None,
                font_for_value: Union[str, tuple[str, int]] | None = None) -> None:
         if not getattr(self, '_finalized', False):
-            self._finalize()
+            self.finalize()
 
         super().update(value, disabled, append, font, text_color, background_color, text_color_for_value,
                        background_color_for_value, visible, autoscroll, justification, font_for_value)
