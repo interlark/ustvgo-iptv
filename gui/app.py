@@ -63,7 +63,7 @@ async def app() -> None:
         [
             sg.Frame('Log', expand_x=True, expand_y=True, layout=[
                 [
-                    MultilineLog(key='-LOG-', size=(61, 15), expand_x=True, autoscroll=True,
+                    MultilineLog(key='-LOG-', size=(61, 15), expand_x=True, autoscroll=True, focus=True,
                                  reroute_stdout=True, reroute_stderr=True, echo_stdout_stderr=True),
                 ],
             ]),
