@@ -110,10 +110,10 @@ async def app() -> None:
         for arg_name in ('port', 'parallel'):
             try:
                 value_str = window[f'-IN_{arg_name.upper()}-'].get()
-                value_ = int(value_str)
-                if value_ <= 0:
+                value = int(value_str)
+                if value <= 0:
                     raise ValueError
-                settings[arg_name] = value_
+                settings[arg_name] = value
             except ValueError:
                 if verbose:
                     error_popup(f'Incorrect "{arg_name}" integer value "{value_str}"')
