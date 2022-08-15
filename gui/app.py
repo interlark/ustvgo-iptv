@@ -99,7 +99,9 @@ async def app() -> None:
     setup_text_widget(window['-LOG-'].widget, window.TKroot,
                       menu_clear=True, menu_copy=True, menu_github=True)
     setup_text_widget(window['-IN_PORT-'].widget, window.TKroot,
-                      menu_paste=True, menu_cut=True, menu_copy=True, menu_clear=False)
+                      menu_paste=True, menu_cut=True, menu_copy=True)
+    setup_text_widget(window['-IN_PARALLEL-'].widget, window.TKroot,
+                      menu_paste=True, menu_cut=True, menu_copy=True)
 
     # Set disabled color
     for key in ('-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-',
