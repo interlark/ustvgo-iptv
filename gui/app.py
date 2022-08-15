@@ -44,7 +44,7 @@ async def app() -> None:
                             sg.Text('Port', key='-LBL_PORT-', tooltip='Server port'),
                             sg.Input(settings['port'], key='-IN_PORT-', size=(8, 1))
                         ]], expand_x=True, element_justification='right')
-                    ]], expand_x=True, p=(0, 0)),
+                    ]], expand_x=True, p=0),
                 ],
                 [
                     sg.Column([[
@@ -70,22 +70,24 @@ async def app() -> None:
         ],
         [
             sg.ProgressBar(0, orientation='h', size=(1, 22),
-                           expand_x=True, key='-PROGRESSBAR-', pad=(5, 10))
+                           expand_x=True, key='-PROGRESSBAR-', p=(5, 10))
         ],
         [
-            sg.Column([
-                [
-                    sg.Button('Start', size=(10, 1), key='-BTN_START-', pad=((5, 5), (2, 8))),
-                    sg.Button('Stop', size=(10, 1), key='-BTN_STOP-', visible=False,
-                              button_color=('white', 'orange3'), pad=((3, 5), (2, 8))),
-                ]
-            ], element_justification='left', pad=0),
-            sg.Column([
-                [
-                    sg.Button('Exit', size=(10, 1), button_color=('white', 'firebrick3'),
-                              key='-BTN_EXIT-', pad=((5, 3), (2, 8))),
-                ]
-            ], expand_x=True, element_justification='right', pad=0)
+            sg.Column([[
+                sg.Column([
+                    [
+                        sg.Button('Start', size=(10, 1), key='-BTN_START-', p=0),
+                        sg.Button('Stop', size=(10, 1), key='-BTN_STOP-',
+                                  button_color=('white', 'orange3'), p=0, visible=False),
+                    ]
+                ], element_justification='left', p=0),
+                sg.Column([
+                    [
+                        sg.Button('Exit', size=(10, 1), key='-BTN_EXIT-',
+                                  button_color=('white', 'firebrick3'), p=0),
+                    ]
+                ], expand_x=True, element_justification='right', p=0),
+            ]], expand_x=True, p=(5, (3, 8))),
         ],
     ]
 
@@ -142,6 +144,15 @@ async def app() -> None:
 
             window['-BTN_STOP-'].update(visible=state)
             window['-BTN_START-'].update(visible=not state)
+            
+            # Switch focus between start\stop buttons
+            focused_element = window.find_element_with_focus()
+            if not focused_element.visible:
+                if focused_element is window['-BTN_STOP-']:
+                    window['-BTN_START-'].set_focus()
+                elif focused_element is window['-BTN_START-']:
+                    window['-BTN_STOP-'].set_focus()
+
         except tk.TclError:
             pass  # Main window could be already destroyed by sg
 
@@ -165,7 +176,7 @@ async def app() -> None:
 
     # Finalize custom log element and set focus on it
     window['-LOG-'].finalize()
-    window['-LOG-'].widget.focus_force()
+    window['-LOG-'].set_focus(force=True)
 
     # Main loop
     while True:
