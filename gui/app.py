@@ -144,7 +144,7 @@ async def app() -> None:
 
             window['-BTN_STOP-'].update(visible=state)
             window['-BTN_START-'].update(visible=not state)
-            
+
             # Switch focus between start\stop buttons
             focused_element = window.find_element_with_focus()
             if not focused_element.visible:
