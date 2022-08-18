@@ -45,7 +45,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 
 ## ⚙️ Usage - CLI
 
-  To generate master playlist, you could simple run app without any arguments.
+  You can run the app without any arguments.
   ```
   ustvgo-iptv
   ```
@@ -74,7 +74,7 @@ Two iconsets for IPTV players with light and dark backgrounds
   * **Windows**: C:\Users\\%USERPROFILE%\AppData\Local\ustvgo-iptv\settings.cfg
 
 ## 🔗 URLs
-To play and enjoy your free IPTV you need 2 URLs:
+To play and enjoy your free IPTV you need 2 URLs that this app provides:
 1) Your generated **master playlist**: 🔗 http://127.0.0.1:6363/ustvgo.m3u8
 2) **TV Guide** (content updates twice an hour): 🔗 http://127.0.0.1:6363/tvguide.xml
 
