@@ -34,4 +34,5 @@ def default_settings() -> dict[str, Any]:
     """Get default settings."""
     parser = ustvgo_iptv.args_parser()
     return {x.dest: x.default for x in parser._actions
-            if x.default != argparse.SUPPRESS}
+            if x.default != argparse.SUPPRESS
+            and x.dest != argparse.SUPPRESS}
