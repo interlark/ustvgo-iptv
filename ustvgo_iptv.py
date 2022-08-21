@@ -495,7 +495,7 @@ def args_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         '-t', '--parallel', metavar='N',
         type=int_range(min_value=1), default=10,
-        help='Number of parallel fetcher requests (default: %(default)s)'
+        help='Number of parallel parsing requests (default: %(default)s)'
     )
     parser.add_argument(
         '--icons-for-light-bg', action='store_true',
