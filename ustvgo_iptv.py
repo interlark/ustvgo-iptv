@@ -9,7 +9,7 @@ import pathlib
 import re
 import sys
 import time
-from functools import partial
+import functools
 from typing import Any, Awaitable, Callable, List, Optional
 
 import aiohttp
@@ -31,8 +31,18 @@ Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
 ''.encode('idna')
 
 # Usage:
-# ./ustvgo_iptv.py
+# $ ./ustvgo_iptv.py
+# $ ./ustvgo_iptv.py --icons-for-light-bg
+# $ ./ustvgo_iptv.py --access-logs --port 1234
+#
+# Install / uninstall service (Linux only)
+# $ sudo -E ./ustvgo_iptv.py --icons-for-light-bg install-service
+# $ sudo -E ./ustvgo_iptv.py uninstall-service
+# $ sudo -E env "PATH=$PATH" ustvgo_iptv --port 1234 install-service
+#
+# Run:
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
+# mpv http://127.0.0.1:6363
 
 
 VERSION = '0.1.8'
@@ -84,7 +94,7 @@ async def gather_with_concurrency(n: int, *tasks: Awaitable[Any],
         async with semaphore:
             return await task
 
-    gather = partial(tqdm.gather, desc=progress_title) if show_progress \
+    gather = functools.partial(tqdm.gather, desc=progress_title) if show_progress \
         else asyncio.gather
     return await gather(*[sem_task(x) for x in tasks])  # type: ignore
 
@@ -373,6 +383,93 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         await runner.cleanup()  # cleanup used resources, release port
 
 
+def service_command_handler(command: str, *exec_args: str) -> bool:
+    """Linux service command handler."""
+    import os
+    import subprocess
+
+    service_path = '/etc/systemd/system/ustvgo.service'
+    service_name = os.path.basename(service_path)
+    ret_failed = True
+
+    def run_shell_commands(*commands: str) -> None:
+        for command in commands:
+            subprocess.run(command, shell=True)
+
+    def install_service() -> bool:
+        """Install systemd service."""
+        service_content = f'''
+[Unit]
+Description=USTVGO Free IPTV
+After=network.target
+StartLimitInterval=0
+
+[Service]
+User={os.getlogin()}
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart={' '.join(exec_args)}
+
+[Install]
+WantedBy=multi-user.target
+        '''
+
+        if os.path.isfile(service_path):
+            logger.error('Service %s already exists!', service_path)
+            return True
+
+        with open(service_path, 'w') as f_srv:
+            f_srv.write(service_content.strip())
+
+        os.chmod(service_path, 0o644)
+
+        run_shell_commands(
+            'systemctl daemon-reload',
+            'systemctl enable %s' % service_name,
+            'systemctl start %s' % service_name
+        )
+
+        return False
+
+    def uninstall_service() -> bool:
+        """Uninstall systemd service."""
+
+        if not os.path.isfile(service_path):
+            logger.error('Service %s does not exist!', service_path)
+            return True
+
+        run_shell_commands(
+            'systemctl stop %s' % service_name,
+            'systemctl disable %s' % service_name
+        )
+
+        os.remove(service_path)
+
+        run_shell_commands(
+            'systemctl daemon-reload',
+            'systemctl reset-failed'
+        )
+
+        return False
+
+    try:
+        if command == 'install-service':
+            ret_failed = install_service()
+        elif command == 'uninstall-service':
+            ret_failed = uninstall_service()
+        else:
+            logger.error('Unknown command "%s"', command)
+
+    except PermissionError:
+        logger.error(('Permission denied, try command: '
+                      f'sudo -E {" ".join(exec_args)} {command}'))
+    except Exception as e:
+        logger.error('Error occured: %s', e)
+
+    return ret_failed
+
+
 def args_parser() -> argparse.ArgumentParser:
     """Command line arguments parser."""
     def int_range(min_value: int = -sys.maxsize - 1,
@@ -410,7 +507,7 @@ def args_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         '--tvguide-base-url', metavar='URL',
         default='https://raw.githubusercontent.com/interlark/ustvgo-tvguide/master',
-        help='Base TVGuide URL'
+        help='Base TV Guide URL'
     )
     parser.add_argument(
         '--use-uncompressed-tvguide',
@@ -421,14 +518,38 @@ def args_parser() -> argparse.ArgumentParser:
         '--version', '-v', action='version', version=f'%(prog)s {VERSION}'
     )
 
+    # Linux service subcommands
+    if sys.platform.startswith('linux'):
+        subparsers = parser.add_subparsers(help='Subcommands')
+        install_service_parser = subparsers.add_parser(
+            'install-service', help='Install autostart service'
+        )
+        install_service_parser.set_defaults(
+            invoke_subcommand=functools.partial(service_command_handler, 'install-service')
+        )
+        uninstall_service_parser = subparsers.add_parser(
+            'uninstall-service', help='Uninstall autostart service'
+        )
+        uninstall_service_parser.set_defaults(
+            invoke_subcommand=functools.partial(service_command_handler, 'uninstall-service')
+        )
+
     return parser
 
 
 def main() -> None:
     """Entry point."""
+    # Parse CLI arguments
     parser = args_parser()
     args = parser.parse_args()
 
+    # Invoke subcommands
+    if 'invoke_subcommand' in args:
+        exec_args = [arg for idx, arg in enumerate(sys.argv)
+                     if arg.startswith('-') or idx == 0]
+        exit(args.invoke_subcommand(*exec_args))
+
+    # Run server
     try:
         asyncio.run(playlist_server(**vars(args)))
     except KeyboardInterrupt:
