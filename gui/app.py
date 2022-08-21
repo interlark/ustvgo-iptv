@@ -62,7 +62,8 @@ async def app() -> None:
                                         tooltip='Use uncompressed TV Guide in master playlist'),
                         ]], p=0, expand_x=True),
                         sg.Column([[
-                            sg.Text('Parallel', key='-LBL_PARALLEL-', tooltip='Number of parallel requests'),
+                            sg.Text('Parallel', key='-LBL_PARALLEL-',
+                                    tooltip='Number of parallel parsing requests'),
                             sg.Spin(list(range(1, 15 + 1)),
                                     initial_value=settings['parallel'],
                                     key='-IN_PARALLEL-', size=(8, 1))
