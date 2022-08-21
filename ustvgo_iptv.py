@@ -388,7 +388,7 @@ def service_command_handler(command: str, *exec_args: str) -> bool:
     import os
     import subprocess
 
-    service_path = '/etc/systemd/system/ustvgo.service'
+    service_path = '/etc/systemd/system/ustvgo-iptv.service'
     service_name = os.path.basename(service_path)
     ret_failed = True
 
@@ -484,14 +484,16 @@ def args_parser() -> argparse.ArgumentParser:
 
         return constrained_int
 
-    parser = argparse.ArgumentParser('ustvgo-iptv')
+    parser = argparse.ArgumentParser(
+        'ustvgo-iptv', description='USTVGO Free IPTV.', add_help=False
+    )
     parser.add_argument(
-        '--port', '-p', metavar='PORT',
+        '-p', '--port', metavar='PORT',
         type=int_range(min_value=1, max_value=65535), default=6363,
         help='Serving port (default: %(default)s)'
     )
     parser.add_argument(
-        '--parallel', '-t', metavar='N',
+        '-t', '--parallel', metavar='N',
         type=int_range(min_value=1), default=10,
         help='Number of parallel fetcher requests (default: %(default)s)'
     )
@@ -515,7 +517,12 @@ def args_parser() -> argparse.ArgumentParser:
         help='Use uncompressed version of TV Guide in "url-tvg" attribute'
     )
     parser.add_argument(
-        '--version', '-v', action='version', version=f'%(prog)s {VERSION}'
+        '-v', '--version', action='version', version=f'%(prog)s {VERSION}',
+        help='Show program\'s version number and exit'
+    )
+    parser.add_argument(
+        '-h', '--help', action='help', default=argparse.SUPPRESS,
+        help='Show this help message and exit'
     )
 
     # Linux service subcommands
