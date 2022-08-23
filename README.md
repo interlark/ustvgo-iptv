@@ -61,13 +61,28 @@ Two iconsets for IPTV players with light and dark backgrounds
 | --parallel 10             | Number of parallel parsing requests. Default is **10**.          |
 | --use-uncompressed-tvguide| By default, master playlist has a link to **compressed** version of TV Guide:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml.gz"`<br/>With this argument you can switch it to uncompressed:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml"`           |
 
+<br />
+
+**Linux** users can install **systemd service** that automatically runs ustvgo-iptv on start-ups ⏰.
+
+```bash
+# Install "ustvgo-iptv" service
+sudo -E env "PATH=$PATH" ustvgo-iptv install-service
+
+# You can specify any optional arguments you want
+sudo -E env "PATH=$PATH" ustvgo-iptv --port 1234 --access-logs install-service
+
+# Uninstall "ustvgo-iptv" service
+sudo -E env "PATH=$PATH" ustvgo-iptv uninstall-service
+```
+
 ## ⚙️ Usage - GUI
 
-  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/177174497-0e47e52d-1657-45b1-ade4-ec873c1226e3.png"/>
+  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/186168636-be02b127-b695-4cf3-a8ab-68ecfb92b406.png"/>
 
   If you don't like command line stuff, you can run GUI app and click "Start", simple as that.
   
-  With GUI you can set most of the popular options: *port*, *icons scheme*, *access logs*. If you wanna set other options, you can set them with **config file** on following path:
+  GUI uses **config file** on following path:
 
   * **Linux**: ~/.config/ustvgo-iptv/settings.cfg
   * **Mac**: ~/Library/Application Support/ustvgo-iptv/settings.cfg
@@ -164,50 +179,6 @@ To play and enjoy your free IPTV you need 2 URLs that this app provides:
       1) Add via URL -> http://127.0.0.1:6363/ustvgo.m3u8
       2) Settings -> EPG Url -> http://127.0.0.1:6363/tvguide.xml.gz
       ```
-
-## ⏰ Autostart
-You can use **systemd** on Linux-based servers to automatically run **ustvgo-iptv** on start-ups.
-
-1. Get full path to `ustvgo-iptv`
-   ```bash
-   $ which ustvgo-iptv
-   ```
-   ```bash
-   /home/USERNAME/.local/bin/ustvgo-iptv
-   ```
-
-2. Create systemd service file with following text
-   ```bash
-   $ sudo nano /etc/systemd/system/ustvgo.service
-   ```
-
-   ```ini
-   [Unit]
-   Description=USTVGO Free IPTV
-   After=network.target
-   StartLimitInterval=0
-
-   [Service]
-   User=USERNAME
-   Type=simple
-   Restart=always
-   RestartSec=5
-   ExecStart=/home/USERNAME/.local/bin/ustvgo-iptv
-
-   [Install]
-   WantedBy=multi-user.target
-   ```
-
-3. Set permissions and enable the service
-   ```bash
-   $ sudo chmod 644 /etc/systemd/system/ustvgo.service
-   $ sudo systemctl enable ustvgo.service
-   ```
-
-4. Reboot
-
-Don't forget to replace `USERNAME` with your actual username.
-
 
 ## 👍 Support
 - [ustvgo.tv](https://ustvgo.tv) is wonderful project which can offer you a free IPTV, please support these guys buying VPN with their [referral link](https://ustvgo.tv/vpn). With VPN you can watch even more of their channels, like extra 25 or so.
