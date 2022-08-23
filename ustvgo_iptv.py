@@ -38,14 +38,15 @@ Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
 # Install / uninstall service (Linux only)
 # $ sudo -E ./ustvgo_iptv.py --icons-for-light-bg install-service
 # $ sudo -E ./ustvgo_iptv.py uninstall-service
-# $ sudo -E env "PATH=$PATH" ustvgo_iptv --port 1234 install-service
+# $ sudo -E env "PATH=$PATH" ustvgo-iptv --port 1234 install-service
+# $ sudo -E env "PATH=$PATH" ustvgo-iptv uninstall-service
 #
 # Run:
 # vlc http://127.0.0.1:6363/ustvgo.m3u8
 # mpv http://127.0.0.1:6363
 
 
-VERSION = '0.1.8'
+VERSION = '0.1.9'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
