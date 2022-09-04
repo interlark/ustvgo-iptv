@@ -16,6 +16,7 @@
 
 It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **generates master playlist** with available TV channels for IPTV players and **proxies the traffic** between your IPTV players and streaming backends.
 
+> **Note**: See also a [port](https://github.com/interlark/123tv-iptv) of this app for 123TV service
 
 ## ✨ Features
 - 🔑 Auto auth-key rotation
