@@ -2,6 +2,7 @@
 
 import argparse
 import asyncio
+import functools
 import io
 import json
 import logging
@@ -9,7 +10,6 @@ import pathlib
 import re
 import sys
 import time
-import functools
 from typing import Any, Awaitable, Callable, List, Optional
 
 import aiohttp
@@ -42,8 +42,8 @@ Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
 # $ sudo -E env "PATH=$PATH" ustvgo-iptv uninstall-service
 #
 # Run:
-# vlc http://127.0.0.1:6363/ustvgo.m3u8
-# mpv http://127.0.0.1:6363
+# vlc http://127.0.0.1:6363
+# mpv http://127.0.0.1:6363/ustvgo.m3u8
 
 
 VERSION = '0.1.9'
@@ -235,7 +235,7 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         channel = streams[stream_id]
         headers = {name: value for name, value in request.headers.items()
                    if name not in (aiohttp.hdrs.HOST, aiohttp.hdrs.USER_AGENT)}
-        headers = {**USTVGO_HEADERS, **headers}
+        headers = {**headers, **USTVGO_HEADERS}
 
         data = await request.read()
         max_retries = 2  # Second retry for 403-forbidden recovery or response payload errors
@@ -293,7 +293,8 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
             except aiohttp.ClientError as e:
                 logger.error('[Retry %d/%d] Error occured during handling request: %s',
                              retry, max_retries, e, exc_info=True)
-                return web.Response(text=str(e), status=500)
+                if retry >= max_retries:
+                    return web.Response(text=str(e), status=500)
 
         return web.Response(text='', status=500)
 
@@ -388,6 +389,7 @@ def service_command_handler(command: str, *exec_args: str) -> bool:
     """Linux service command handler."""
     import os
     import subprocess
+    import textwrap
 
     service_path = '/etc/systemd/system/ustvgo-iptv.service'
     service_name = os.path.basename(service_path)
@@ -399,22 +401,22 @@ def service_command_handler(command: str, *exec_args: str) -> bool:
 
     def install_service() -> bool:
         """Install systemd service."""
-        service_content = f'''
-[Unit]
-Description=USTVGO Free IPTV
-After=network.target
-StartLimitInterval=0
+        service_content = textwrap.dedent(f'''
+            [Unit]
+            Description=USTVGO Free IPTV
+            After=network.target
+            StartLimitInterval=0
 
-[Service]
-User={os.getlogin()}
-Type=simple
-Restart=always
-RestartSec=5
-ExecStart={' '.join(exec_args)}
+            [Service]
+            User={os.getlogin()}
+            Type=simple
+            Restart=always
+            RestartSec=5
+            ExecStart={' '.join(exec_args)}
 
-[Install]
-WantedBy=multi-user.target
-        '''
+            [Install]
+            WantedBy=multi-user.target
+        ''')
 
         if os.path.isfile(service_path):
             logger.error('Service %s already exists!', service_path)
@@ -435,7 +437,6 @@ WantedBy=multi-user.target
 
     def uninstall_service() -> bool:
         """Uninstall systemd service."""
-
         if not os.path.isfile(service_path):
             logger.error('Service %s does not exist!', service_path)
             return True
