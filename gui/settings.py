@@ -22,7 +22,11 @@ def load_settings() -> dict[str, Any]:
     settings = default_settings()
     settings_path = config_path() / 'settings.cfg'
     if settings_path.is_file():
-        user_settings = json.loads(settings_path.read_text(encoding='utf-8'))
+        try:
+            user_settings = json.loads(settings_path.read_text(encoding='utf-8'))
+        except json.JSONDecodeError:
+            user_settings = {}
+
         settings = {**settings, **user_settings}
     else:
         save_settings(settings)

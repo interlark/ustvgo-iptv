@@ -205,9 +205,14 @@ async def app() -> None:
 
         # Click "Start"
         elif event == '-BTN_START-':
+            # Sync settings
             if not sync_settings():
                 continue
 
+            # Save settings
+            save_settings(settings)
+
+            # Lock user inputs
             lock_controls()
 
             loop = asyncio.get_running_loop()
@@ -226,9 +231,5 @@ async def app() -> None:
         elif event == '@PROGRESS_UPDATE':
             n, total = values['@PROGRESS_UPDATE']
             window['-PROGRESSBAR-'].update(current_count=n, max=total)
-
-    # Save settings before exit
-    sync_settings(verbose=False)
-    save_settings(settings)
 
     window.close()
