@@ -1,0 +1,28 @@
+#!/bin/bash 
+NAME=ustvgo-iptv
+host=$(hostname -s)
+start() {
+echo "Starting IPTV Services: "
+        $NAME > /dev/null 2>&1 &
+}
+
+stop() {
+echo "Stopping IPTV Services: "
+#Find the Process ID for ustvgo-iptv running instance
+ps -ef | grep ustvgo-iptv | grep -v grep | awk '{print $2}' | xargs kill
+}
+
+restart() {
+  stop
+  sleep 3
+  start
+}
+
+case "$1" in
+    start)   start ;;
+    stop)    stop ;;
+    restart) stop; start ;;
+    *) echo "usage: $0 start|stop|restart" >&2
+       exit 1
+       ;;
+esac
