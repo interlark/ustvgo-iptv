@@ -51,7 +51,7 @@ async def app() -> None:
                                     initial_value=settings['port'],
                                     key='-IN_PORT-', size=(8, 1))
                         ]], expand_x=True, element_justification='right')
-                    ]], expand_x=True, p=0),
+                    ]], p=0, expand_x=True),
                 ],
                 [
                     sg.Column([[
@@ -68,7 +68,16 @@ async def app() -> None:
                                     initial_value=settings['parallel'],
                                     key='-IN_PARALLEL-', size=(8, 1))
                         ]], expand_x=True, element_justification='right')
-                    ]], expand_x=True, p=(0, (0, 5))),
+                    ]], p=0, expand_x=True),
+                ],
+                [
+                    sg.Column([[
+                        sg.Column([[
+                            sg.Text('Password', key='-LBL_PASSWORD-',
+                                    tooltip='Add URL path protection with a password'),
+                            sg.Input(settings['password'], key='-IN_PASSWORD-', expand_x=True)
+                        ]], p=0, expand_x=True),
+                    ]], p=((1 if sg.running_windows() else 8, 5), (3, 8)), expand_x=True),
                 ],
             ]),
         ],
@@ -114,10 +123,13 @@ async def app() -> None:
                       menu_paste=True, menu_cut=True, menu_copy=True)
     setup_text_widget(window['-IN_PARALLEL-'].widget, window.TKroot,
                       menu_paste=True, menu_cut=True, menu_copy=True)
+    setup_text_widget(window['-IN_PASSWORD-'].widget, window.TKroot,
+                      menu_paste=True, menu_cut=True, menu_copy=True)
 
     # Set disabled color
     for key in ('-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-',
-                '-CHECK_UNCOMPRESSED_TVGUIDE-', '-LBL_PORT-', '-LBL_PARALLEL-'):
+                '-CHECK_UNCOMPRESSED_TVGUIDE-', '-LBL_PORT-',
+                '-LBL_PARALLEL-', '-LBL_PASSWORD-'):
         window[key].widget.config(disabledforeground='snow3')
 
     # Attach app loggers
@@ -144,16 +156,18 @@ async def app() -> None:
         settings['use_uncompressed_tvguide'] = window['-CHECK_UNCOMPRESSED_TVGUIDE-'].get()
         settings['icons_for_light_bg'] = window['-CHECK_ICONS_FOR_LIGHT_BG-'].get()
         settings['access_logs'] = window['-CHECK_ACCESS_LOGS-'].get()
+        settings['password'] = window['-IN_PASSWORD-'].get()
         return True
 
     # Controls locking during background tasks running
     def lock_controls(state: bool = True) -> None:
         try:
-            for key in ('-LBL_PORT-', '-LBL_PARALLEL-'):
+            for key in ('-LBL_PORT-', '-LBL_PARALLEL-', '-LBL_PASSWORD-'):
                 window[key].widget.configure(state='disabled' if state else 'normal')
 
-            for key in ('-IN_PORT-', '-IN_PARALLEL-', '-CHECK_ICONS_FOR_LIGHT_BG-',
-                        '-CHECK_ACCESS_LOGS-', '-CHECK_UNCOMPRESSED_TVGUIDE-'):
+            for key in ('-IN_PORT-', '-IN_PARALLEL-', '-IN_PASSWORD-',
+                        '-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-',
+                        '-CHECK_UNCOMPRESSED_TVGUIDE-'):
                 window[key].update(disabled=state)
 
             window['-BTN_STOP-'].update(visible=state)
