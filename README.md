@@ -61,6 +61,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 | --port 6363               | Server port. By default, the port is **6363**.           |
 | --parallel 10             | Number of parallel parsing requests. Default is **10**.          |
 | --use-uncompressed-tvguide| By default, master playlist has a link to **compressed** version of TV Guide:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml.gz"`<br/>With this argument you can switch it to uncompressed:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml"`           |
+| --password &lt;PASSWORD&gt;             | Set password prefix for the URL.          |
 
 <br />
 
@@ -79,7 +80,7 @@ sudo -E env "PATH=$PATH" ustvgo-iptv uninstall-service
 
 ## ⚙️ Usage - GUI
 
-  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/186168636-be02b127-b695-4cf3-a8ab-68ecfb92b406.png"/>
+  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/201539903-a9ff24cf-289b-41ad-b835-531b509d1a01.png"/>
 
   If you don't like command line stuff, you can run GUI app and click "Start", simple as that.
   
