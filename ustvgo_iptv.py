@@ -11,6 +11,7 @@ import re
 import sys
 import time
 from typing import Any, Awaitable, Callable, List, Optional
+from urllib.parse import quote_plus
 
 import aiohttp
 import netifaces
@@ -46,7 +47,7 @@ Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
 # mpv http://127.0.0.1:6363/ustvgo.m3u8
 
 
-VERSION = '0.1.10'
+VERSION = '0.1.11'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
@@ -131,10 +132,11 @@ async def retrieve_stream_url(channel: Channel, max_retries: int = 5) -> Optiona
                 return None
 
 
-def render_playlist(channels: List[Channel], host: str, use_uncompressed_tvguide: bool) -> str:
+def render_playlist(channels: List[Channel], host: str,
+                    use_uncompressed_tvguide: bool, password: str) -> str:
     """Render master playlist."""
     with io.StringIO() as f:
-        base_url = furl(netloc=host, scheme='http')
+        base_url = furl(netloc=host, scheme='http', path=password)
         tvg_compressed_ext = '' if use_uncompressed_tvguide else '.gz'
         tvg_url = base_url / f'tvguide.xml{tvg_compressed_ext}'
 
@@ -142,8 +144,9 @@ def render_playlist(channels: List[Channel], host: str, use_uncompressed_tvguide
         for channel in channels:
             if channel.get('stream_url'):
                 tvg_logo = base_url / 'logos' / (channel['stream_id'] + '.png')
-                stream_url = (furl(channel['stream_url'])
-                              .set(netloc=host, scheme='http')
+                stream_url = (furl(base_url,
+                                   path=base_url.pathstr + channel['stream_url'].pathstr,
+                                   query=channel['stream_url'].querystr)
                               # No need to expose auth key to the master playlist
                               .remove(args=['wmsAuthSign'])
                               .tostr(query_dont_quote='='))
@@ -182,12 +185,12 @@ async def update_auth_key(channel: Channel) -> Optional[str]:
 
 async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
                           access_logs: bool, icons_for_light_bg: bool,
-                          use_uncompressed_tvguide: bool) -> None:
+                          use_uncompressed_tvguide: bool, password: str) -> None:
     """Run proxying server with key rotation."""
     async def master_handler(request: web.Request) -> web.Response:
         """Master playlist handler."""
         return web.Response(
-            text=render_playlist(channels, request.host, use_uncompressed_tvguide)
+            text=render_playlist(channels, request.host, use_uncompressed_tvguide, password)
         )
 
     async def logos_handler(request: web.Request) -> web.Response:
@@ -228,7 +231,6 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
     async def stream_handler(request: web.Request) -> web.Response:
         """Stream handler."""
         stream_id = request.match_info.get('stream_id')
-
         if stream_id not in streams:
             return web.Response(text='Stream not found!', status=404)
 
@@ -241,10 +243,11 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         max_retries = 2  # Second retry for 403-forbidden recovery or response payload errors
 
         for retry in range(1, max_retries + 1):
-            url = furl(request.path_qs).set(
-                origin=channel['stream_origin'],
-                args={'wmsAuthSign': channel['auth_key']}
-            ).tostr(query_dont_quote='=')
+            upstream_url_part = request.path_qs[len(password_prefix):]
+            url = (furl(upstream_url_part)
+                   .set(origin=channel['stream_origin'],
+                        args={'wmsAuthSign': channel['auth_key']})
+                   ).tostr(query_dont_quote='=')
 
             try:
                 async with aiohttp.TCPConnector(ssl=False, force_close=True) as connector:
@@ -353,19 +356,27 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         access_logger.setLevel('ERROR')
 
     # Run server
-    for ip_address in local_ip_addresses():
-        logger.info(f'Serving http://{ip_address}:{port}/ustvgo.m3u8')
-        logger.info(f'Serving http://{ip_address}:{port}/tvguide.xml')
-
     app = web.Application()
     app.router.add_get('/', master_handler)  # master shortcut
     app.router.add_get('/ustvgo.m3u8', master_handler)  # master
     app.router.add_get('/tvguide.xml', tvguide_handler)  # tvguide
     app.router.add_get('/tvguide.xml.gz', tvguide_handler)  # tvguide compressed
     app.router.add_get('/logos/{filename:[^/]+}', logos_handler)  # logos
-    app.router.add_route('*', '/{stream_id}{tail:/.*}', stream_handler)  # stream
+    app.router.add_get('/{stream_id}{tail:/.*}', stream_handler)  # stream
 
-    runner = web.AppRunner(app)
+    if password:
+        password_prefix = f'/{password}'
+        app_auth = web.Application()
+        app_auth.add_subapp(password_prefix, app)
+        runner = web.AppRunner(app_auth)
+    else:
+        password_prefix = ''
+        runner = web.AppRunner(app)
+
+    for ip_address in local_ip_addresses():
+        logger.info(f'Serving http://{ip_address}:{port}{password_prefix}/ustvgo.m3u8')
+        logger.info(f'Serving http://{ip_address}:{port}{password_prefix}/tvguide.xml')
+
     try:
         await runner.setup()
         site = web.TCPSite(runner, port=port)
@@ -517,6 +528,12 @@ def args_parser() -> argparse.ArgumentParser:
         '--use-uncompressed-tvguide',
         action='store_true',
         help='Use uncompressed version of TV Guide in "url-tvg" attribute'
+    )
+    parser.add_argument(
+        '--password',
+        type=quote_plus,
+        default='',
+        help='Add password to the path'
     )
     parser.add_argument(
         '-v', '--version', action='version', version=f'%(prog)s {VERSION}',
