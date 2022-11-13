@@ -63,7 +63,7 @@ logger = logging.getLogger(__name__)
 def root_dir() -> pathlib.Path:
     """Root directory."""
     if hasattr(sys, '_MEIPASS'):
-        return pathlib.Path(sys._MEIPASS)  # type: ignore
+        return pathlib.Path(sys._MEIPASS)
     else:
         return pathlib.Path(__file__).parent
 
