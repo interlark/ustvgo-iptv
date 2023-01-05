@@ -131,7 +131,7 @@ async def retrieve_stream_url(channel: Channel, max_retries: int = 5) -> Optiona
                 return None
 
 
-def render_playlist(channels: List[Channel], host: str, use_uncompressed_tvguide: bool) -> str:
+def render_playlist(channels: List[Channel], scheme: str, host: str, use_uncompressed_tvguide: bool) -> str:
     """Render master playlist."""
     with io.StringIO() as f:
         base_url = furl(netloc=host, scheme='http')
@@ -143,7 +143,7 @@ def render_playlist(channels: List[Channel], host: str, use_uncompressed_tvguide
             if channel.get('stream_url'):
                 tvg_logo = base_url / 'logos' / (channel['stream_id'] + '.png')
                 stream_url = (furl(channel['stream_url'])
-                              .set(netloc=host, scheme='http')
+                              .set(netloc=host, scheme=scheme)
                               # No need to expose auth key to the master playlist
                               .remove(args=['wmsAuthSign'])
                               .tostr(query_dont_quote='='))
@@ -187,7 +187,7 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
     async def master_handler(request: web.Request) -> web.Response:
         """Master playlist handler."""
         return web.Response(
-            text=render_playlist(channels, request.host, use_uncompressed_tvguide)
+            text=render_playlist(channels, request.scheme, request.host, use_uncompressed_tvguide)
         )
 
     async def logos_handler(request: web.Request) -> web.Response:
@@ -358,6 +358,7 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
         logger.info(f'Serving http://{ip_address}:{port}/tvguide.xml')
 
     app = web.Application()
+    await setup(app, XForwardedRelaxed())
     app.router.add_get('/', master_handler)  # master shortcut
     app.router.add_get('/ustvgo.m3u8', master_handler)  # master
     app.router.add_get('/tvguide.xml', tvguide_handler)  # tvguide
