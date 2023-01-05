@@ -134,7 +134,7 @@ async def retrieve_stream_url(channel: Channel, max_retries: int = 5) -> Optiona
 def render_playlist(channels: List[Channel], scheme: str, host: str, use_uncompressed_tvguide: bool) -> str:
     """Render master playlist."""
     with io.StringIO() as f:
-        base_url = furl(netloc=host, scheme='http')
+        base_url = furl(netloc=host, scheme=scheme)
         tvg_compressed_ext = '' if use_uncompressed_tvguide else '.gz'
         tvg_url = base_url / f'tvguide.xml{tvg_compressed_ext}'
 
