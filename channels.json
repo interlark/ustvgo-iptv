@@ -225,6 +225,14 @@
     },
     {
         "id": 29,
+        "stream_id": "DiscoveryFamily",
+        "tvguide_id": "9233015612",
+        "name": "Discovery Family",
+        "category": "Kids",
+        "language": "en"
+    },
+    {
+        "id": 30,
         "stream_id": "Disney",
         "tvguide_id": "9200011893",
         "name": "Disney",
@@ -232,7 +240,7 @@
         "language": "en"
     },
     {
-        "id": 30,
+        "id": 31,
         "stream_id": "DisneyJr",
         "tvguide_id": "9200016560",
         "name": "Disney Junior",
@@ -240,7 +248,7 @@
         "language": "en"
     },
     {
-        "id": 31,
+        "id": 32,
         "stream_id": "DisneyXD",
         "tvguide_id": "9200004852",
         "name": "Disney XD",
@@ -248,7 +256,7 @@
         "language": "en"
     },
     {
-        "id": 32,
+        "id": 33,
         "stream_id": "DIY",
         "tvguide_id": "9200000664",
         "name": "Magnolia Network (DIY)",
@@ -256,7 +264,7 @@
         "language": "en"
     },
     {
-        "id": 33,
+        "id": 34,
         "stream_id": "E",
         "tvguide_id": "9233003794",
         "name": "E!",
@@ -264,7 +272,7 @@
         "language": "en"
     },
     {
-        "id": 34,
+        "id": 35,
         "stream_id": "ESPN",
         "tvguide_id": "9233007996",
         "name": "ESPN",
@@ -272,7 +280,7 @@
         "language": "en"
     },
     {
-        "id": 35,
+        "id": 36,
         "stream_id": "ESPNHD",
         "tvguide_id": "9233007996",
         "name": "ESPN HD",
@@ -280,7 +288,7 @@
         "language": "en"
     },
     {
-        "id": 36,
+        "id": 37,
         "stream_id": "ESPN2",
         "tvguide_id": "9200016131",
         "name": "ESPN2",
@@ -288,7 +296,7 @@
         "language": "en"
     },
     {
-        "id": 37,
+        "id": 38,
         "stream_id": "ESPNU",
         "tvguide_id": "9233011350",
         "name": "ESPNU",
@@ -296,7 +304,7 @@
         "language": "en"
     },
     {
-        "id": 38,
+        "id": 39,
         "stream_id": "ESPNews",
         "tvguide_id": "9200006523",
         "name": "ESPNews",
@@ -304,7 +312,7 @@
         "language": "en"
     },
     {
-        "id": 39,
+        "id": 40,
         "stream_id": "FoodNetwork",
         "tvguide_id": "9233005598",
         "name": "Food Network",
@@ -312,7 +320,7 @@
         "language": "en"
     },
     {
-        "id": 40,
+        "id": 41,
         "stream_id": "FOX",
         "tvguide_id": "9233002271",
         "name": "FOX",
@@ -320,7 +328,7 @@
         "language": "en"
     },
     {
-        "id": 41,
+        "id": 42,
         "stream_id": "FOXHD",
         "tvguide_id": "9233002271",
         "name": "FOX HD",
@@ -328,7 +336,7 @@
         "language": "en"
     },
     {
-        "id": 42,
+        "id": 43,
         "stream_id": "FOXNY",
         "tvguide_id": "9233003497",
         "name": "FOX 5 New York",
@@ -336,7 +344,7 @@
         "language": "en"
     },
     {
-        "id": 43,
+        "id": 44,
         "stream_id": "FoxBusiness",
         "tvguide_id": "9200009124",
         "name": "Fox Business",
@@ -344,7 +352,7 @@
         "language": "en"
     },
     {
-        "id": 44,
+        "id": 45,
         "stream_id": "FoxNews",
         "tvguide_id": "9233006969",
         "name": "Fox News",
@@ -352,7 +360,7 @@
         "language": "en"
     },
     {
-        "id": 45,
+        "id": 46,
         "stream_id": "Freeform",
         "tvguide_id": "9200000497",
         "name": "Freeform",
@@ -360,7 +368,7 @@
         "language": "en"
     },
     {
-        "id": 46,
+        "id": 47,
         "stream_id": "FS1",
         "tvguide_id": "9233000539",
         "name": "Fox Sports 1 (FS1)",
@@ -368,7 +376,7 @@
         "language": "en"
     },
     {
-        "id": 47,
+        "id": 48,
         "stream_id": "FS1HD",
         "tvguide_id": "9233000539",
         "name": "Fox Sports 1 HD",
@@ -376,7 +384,7 @@
         "language": "en"
     },
     {
-        "id": 48,
+        "id": 49,
         "stream_id": "FS2",
         "tvguide_id": "9200009884",
         "name": "Fox Sports 2 (FS2)",
@@ -384,7 +392,7 @@
         "language": "en"
     },
     {
-        "id": 49,
+        "id": 50,
         "stream_id": "FX",
         "tvguide_id": "9233006959",
         "name": "FX",
@@ -392,7 +400,7 @@
         "language": "en"
     },
     {
-        "id": 50,
+        "id": 51,
         "stream_id": "FXMovie",
         "tvguide_id": "9233013967",
         "name": "FX Movie Channel",
@@ -400,7 +408,7 @@
         "language": "en"
     },
     {
-        "id": 51,
+        "id": 52,
         "stream_id": "FXX",
         "tvguide_id": "9200014910",
         "name": "FXX",
@@ -408,7 +416,7 @@
         "language": "en"
     },
     {
-        "id": 52,
+        "id": 53,
         "stream_id": "GOLF",
         "tvguide_id": "9200011865",
         "name": "Golf Channel",
@@ -416,7 +424,7 @@
         "language": "en"
     },
     {
-        "id": 53,
+        "id": 54,
         "stream_id": "GSN",
         "tvguide_id": "9200019858",
         "name": "Game Show Network",
@@ -424,7 +432,7 @@
         "language": "en"
     },
     {
-        "id": 54,
+        "id": 55,
         "stream_id": "Hallmark",
         "tvguide_id": "9200016034",
         "name": "Hallmark Channel",
@@ -432,7 +440,7 @@
         "language": "en"
     },
     {
-        "id": 55,
+        "id": 56,
         "stream_id": "HBO",
         "tvguide_id": "9200004886",
         "name": "HBO",
@@ -440,7 +448,7 @@
         "language": "en"
     },
     {
-        "id": 56,
+        "id": 57,
         "stream_id": "HBOHD",
         "tvguide_id": "9200004886",
         "name": "HBO HD",
@@ -448,7 +456,7 @@
         "language": "en"
     },
     {
-        "id": 57,
+        "id": 58,
         "stream_id": "HGTV",
         "tvguide_id": "9200004467",
         "name": "Home & Garden TV",
@@ -456,7 +464,7 @@
         "language": "en"
     },
     {
-        "id": 58,
+        "id": 59,
         "stream_id": "History",
         "tvguide_id": "9233008002",
         "name": "History",
@@ -464,7 +472,7 @@
         "language": "en"
     },
     {
-        "id": 59,
+        "id": 60,
         "stream_id": "HLN",
         "tvguide_id": "9233005762",
         "name": "HLN",
@@ -472,7 +480,7 @@
         "language": "en"
     },
     {
-        "id": 60,
+        "id": 61,
         "stream_id": "HMM",
         "tvguide_id": "9200020115",
         "name": "Hallmark Movies & Mysteries",
@@ -480,7 +488,7 @@
         "language": "en"
     },
     {
-        "id": 61,
+        "id": 62,
         "stream_id": "ID",
         "tvguide_id": "9200002243",
         "name": "Investigation Discovery",
@@ -488,7 +496,7 @@
         "language": "en"
     },
     {
-        "id": 62,
+        "id": 63,
         "stream_id": "IONNY",
         "tvguide_id": "9233015369",
         "name": "ION (WPXN) New York",
@@ -496,7 +504,7 @@
         "language": "en"
     },
     {
-        "id": 63,
+        "id": 64,
         "stream_id": "Lifetime",
         "tvguide_id": "9200000502",
         "name": "Lifetime",
@@ -504,7 +512,7 @@
         "language": "en"
     },
     {
-        "id": 64,
+        "id": 65,
         "stream_id": "LifetimeM",
         "tvguide_id": "9200000502",
         "name": "Lifetime Movie Network",
@@ -512,7 +520,7 @@
         "language": "en"
     },
     {
-        "id": 65,
+        "id": 66,
         "stream_id": "MLB",
         "tvguide_id": "9200009223",
         "name": "MLB Network",
@@ -520,7 +528,7 @@
         "language": "en"
     },
     {
-        "id": 66,
+        "id": 67,
         "stream_id": "MotorTrend",
         "tvguide_id": "9233003479",
         "name": "Motor Trend",
@@ -528,7 +536,7 @@
         "language": "en"
     },
     {
-        "id": 67,
+        "id": 68,
         "stream_id": "MSNBC",
         "tvguide_id": "9233006803",
         "name": "MSNBC",
@@ -536,7 +544,7 @@
         "language": "en"
     },
     {
-        "id": 68,
+        "id": 69,
         "stream_id": "MTV",
         "tvguide_id": "9233015501",
         "name": "MTV",
@@ -544,7 +552,7 @@
         "language": "en"
     },
     {
-        "id": 69,
+        "id": 70,
         "stream_id": "NatGEO",
         "tvguide_id": "9233009337",
         "name": "National Geographic",
@@ -552,7 +560,7 @@
         "language": "en"
     },
     {
-        "id": 70,
+        "id": 71,
         "stream_id": "NatGEOWild",
         "tvguide_id": "9200004683",
         "name": "National Geographic Wild",
@@ -560,7 +568,7 @@
         "language": "en"
     },
     {
-        "id": 71,
+        "id": 72,
         "stream_id": "NBA",
         "tvguide_id": "9200000070",
         "name": "NBA TV",
@@ -568,7 +576,7 @@
         "language": "en"
     },
     {
-        "id": 72,
+        "id": 73,
         "stream_id": "NBC",
         "tvguide_id": "9233009876",
         "name": "NBC",
@@ -576,7 +584,7 @@
         "language": "en"
     },
     {
-        "id": 73,
+        "id": 74,
         "stream_id": "NBCHD",
         "tvguide_id": "9233009876",
         "name": "NBC HD",
@@ -584,7 +592,7 @@
         "language": "en"
     },
     {
-        "id": 74,
+        "id": 75,
         "stream_id": "NBCNY",
         "tvguide_id": "9200016000",
         "name": "NBC 4 New York",
@@ -592,7 +600,7 @@
         "language": "en"
     },
     {
-        "id": 75,
+        "id": 76,
         "stream_id": "NBCSN",
         "tvguide_id": "9233000030",
         "name": "NBC Sports (NBCSN)",
@@ -600,7 +608,7 @@
         "language": "en"
     },
     {
-        "id": 76,
+        "id": 77,
         "stream_id": "NFL",
         "tvguide_id": "9200004330",
         "name": "NFL Network",
@@ -608,7 +616,7 @@
         "language": "en"
     },
     {
-        "id": 77,
+        "id": 78,
         "stream_id": "NFLHD",
         "tvguide_id": "9200004330",
         "name": "NFL HD",
@@ -616,7 +624,7 @@
         "language": "en"
     },
     {
-        "id": 78,
+        "id": 79,
         "stream_id": "NFLRZ",
         "tvguide_id": "9233000241",
         "name": "NFL RedZone",
@@ -624,7 +632,7 @@
         "language": "en"
     },
     {
-        "id": 79,
+        "id": 80,
         "stream_id": "NHLHD",
         "tvguide_id": "9200016261",
         "name": "NHL HD",
@@ -632,7 +640,7 @@
         "language": "en"
     },
     {
-        "id": 80,
+        "id": 81,
         "stream_id": "Nickelodeon",
         "tvguide_id": "9233011497",
         "name": "Nickelodeon",
@@ -640,7 +648,7 @@
         "language": "en"
     },
     {
-        "id": 81,
+        "id": 82,
         "stream_id": "Nicktoons",
         "tvguide_id": "9200020469",
         "name": "Nicktoons",
@@ -648,7 +656,7 @@
         "language": "en"
     },
     {
-        "id": 82,
+        "id": 83,
         "stream_id": "NickJr",
         "tvguide_id": "9233007153",
         "name": "Nick Jr",
@@ -656,7 +664,7 @@
         "language": "en"
     },
     {
-        "id": 83,
+        "id": 84,
         "stream_id": "OAN",
         "tvguide_id": "9200005058",
         "name": "One America News Network",
@@ -664,7 +672,7 @@
         "language": "en"
     },
     {
-        "id": 84,
+        "id": 85,
         "stream_id": "OWN",
         "tvguide_id": "9200004740",
         "name": "Oprah Winfrey Network (OWN)",
@@ -672,7 +680,7 @@
         "language": "en"
     },
     {
-        "id": 85,
+        "id": 86,
         "stream_id": "OLY",
         "tvguide_id": "9233008939",
         "name": "Olympic Channel",
@@ -680,7 +688,7 @@
         "language": "en"
     },
     {
-        "id": 86,
+        "id": 87,
         "stream_id": "Oxygen",
         "tvguide_id": "9200012145",
         "name": "Oxygen",
@@ -688,7 +696,7 @@
         "language": "en"
     },
     {
-        "id": 87,
+        "id": 88,
         "stream_id": "Paramount",
         "tvguide_id": "9233001931",
         "name": "Paramount Network",
@@ -696,7 +704,7 @@
         "language": "en"
     },
     {
-        "id": 88,
+        "id": 89,
         "stream_id": "PBS",
         "tvguide_id": "9233004141",
         "name": "PBS",
@@ -704,7 +712,7 @@
         "language": "en"
     },
     {
-        "id": 89,
+        "id": 90,
         "stream_id": "POP",
         "tvguide_id": "9200018304",
         "name": "Pop",
@@ -712,7 +720,7 @@
         "language": "en"
     },
     {
-        "id": 90,
+        "id": 91,
         "stream_id": "Reelz",
         "tvguide_id": "9200011769",
         "name": "Reelz",
@@ -720,7 +728,7 @@
         "language": "en"
     },
     {
-        "id": 91,
+        "id": 92,
         "stream_id": "Science",
         "tvguide_id": "9200019847",
         "name": "Science",
@@ -728,7 +736,7 @@
         "language": "en"
     },
     {
-        "id": 92,
+        "id": 93,
         "stream_id": "SECN",
         "tvguide_id": "9233002484",
         "name": "SEC Network",
@@ -736,7 +744,7 @@
         "language": "en"
     },
     {
-        "id": 93,
+        "id": 94,
         "stream_id": "Showtime",
         "tvguide_id": "9233011188",
         "name": "Showtime",
@@ -744,7 +752,7 @@
         "language": "en"
     },
     {
-        "id": 94,
+        "id": 95,
         "stream_id": "StarZ",
         "tvguide_id": "9233013809",
         "name": "Starz",
@@ -752,7 +760,7 @@
         "language": "en"
     },
     {
-        "id": 95,
+        "id": 96,
         "stream_id": "SundanceTV",
         "tvguide_id": "9233001687",
         "name": "Sundance TV",
@@ -760,7 +768,7 @@
         "language": "en"
     },
     {
-        "id": 96,
+        "id": 97,
         "stream_id": "SYFY",
         "tvguide_id": "9200004316",
         "name": "Syfy",
@@ -768,7 +776,7 @@
         "language": "en"
     },
     {
-        "id": 97,
+        "id": 98,
         "stream_id": "TBS",
         "tvguide_id": "9233011348",
         "name": "TBS",
@@ -776,7 +784,7 @@
         "language": "en"
     },
     {
-        "id": 98,
+        "id": 99,
         "stream_id": "TCM",
         "tvguide_id": "9200017928",
         "name": "Turner Classic Movies (TCM)",
@@ -784,7 +792,7 @@
         "language": "en"
     },
     {
-        "id": 99,
+        "id": 100,
         "stream_id": "Telemundo",
         "tvguide_id": "9200011857",
         "name": "Telemundo",
@@ -792,7 +800,7 @@
         "language": "es"
     },
     {
-        "id": 100,
+        "id": 101,
         "stream_id": "Tennis",
         "tvguide_id": "9200017917",
         "name": "Tennis Channel",
@@ -800,7 +808,7 @@
         "language": "en"
     },
     {
-        "id": 101,
+        "id": 102,
         "stream_id": "TeenNick",
         "tvguide_id": "9200006974",
         "name": "TeenNick",
@@ -808,7 +816,7 @@
         "language": "en"
     },
     {
-        "id": 102,
+        "id": 103,
         "stream_id": "TLC",
         "tvguide_id": "9200016249",
         "name": "The Learning Channel (TLC)",
@@ -816,7 +824,7 @@
         "language": "en"
     },
     {
-        "id": 103,
+        "id": 104,
         "stream_id": "TNT",
         "tvguide_id": "9233011830",
         "name": "Turner Network Television (TNT)",
@@ -824,7 +832,7 @@
         "language": "en"
     },
     {
-        "id": 104,
+        "id": 105,
         "stream_id": "Travel",
         "tvguide_id": "9233000035",
         "name": "Travel Channel",
@@ -832,7 +840,7 @@
         "language": "en"
     },
     {
-        "id": 105,
+        "id": 106,
         "stream_id": "TruTV",
         "tvguide_id": "9233015561",
         "name": "truTV",
@@ -840,7 +848,7 @@
         "language": "en"
     },
     {
-        "id": 106,
+        "id": 107,
         "stream_id": "TVLand",
         "tvguide_id": "9233005468",
         "name": "TV Land",
@@ -848,7 +856,7 @@
         "language": "en"
     },
     {
-        "id": 107,
+        "id": 108,
         "stream_id": "TWC",
         "tvguide_id": "9200016258",
         "name": "The Weather Channel",
@@ -856,7 +864,7 @@
         "language": "en"
     },
     {
-        "id": 108,
+        "id": 109,
         "stream_id": "Univision",
         "tvguide_id": "9200000867",
         "name": "Univisión Network",
@@ -864,7 +872,7 @@
         "language": "es"
     },
     {
-        "id": 109,
+        "id": 110,
         "stream_id": "USANetwork",
         "tvguide_id": "9200009133",
         "name": "USA Network",
@@ -872,7 +880,7 @@
         "language": "en"
     },
     {
-        "id": 110,
+        "id": 111,
         "stream_id": "VH1",
         "tvguide_id": "9233000037",
         "name": "VH1",
@@ -880,7 +888,7 @@
         "language": "en"
     },
     {
-        "id": 111,
+        "id": 112,
         "stream_id": "WETV",
         "tvguide_id": "9233003770",
         "name": "We TV",
@@ -888,7 +896,7 @@
         "language": "en"
     },
     {
-        "id": 112,
+        "id": 113,
         "stream_id": "WWE",
         "tvguide_id": "",
         "name": "WWE Network",
@@ -896,7 +904,7 @@
         "language": "en"
     },
     {
-        "id": 113,
+        "id": 114,
         "stream_id": "YES",
         "tvguide_id": "9200004247",
         "name": "YES Network",
