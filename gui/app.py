@@ -171,12 +171,18 @@ async def app() -> None:
     def lock_controls(state: bool = True) -> None:
         try:
             for key in ('-LBL_PORT-', '-LBL_PARALLEL-', '-LBL_PASSWORD-'):
-                window[key].widget.configure(state='disabled' if state else 'normal')
+                window[key].widget.config(state='disabled' if state else 'normal')
 
             for key in ('-IN_PORT-', '-IN_PARALLEL-', '-IN_PASSWORD-',
                         '-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_UNCOMPRESSED_TVGUIDE-',
                         '-CHECK_ACCESS_LOGS-', '-CHECK_AUTOSTART-'):
                 window[key].update(disabled=state)
+
+            # Change foregorund for tk.Entry widget
+            if state:
+                window['-IN_PASSWORD-'].widget.config(fg='gray')
+            else:
+                window['-IN_PASSWORD-'].widget.config(fg='black')
 
             window['-BTN_STOP-'].update(visible=state)
             window['-BTN_START-'].update(visible=not state)
