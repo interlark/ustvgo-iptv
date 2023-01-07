@@ -364,7 +364,8 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
     app.router.add_get('/logos/{filename:[^/]+}', logos_handler)  # logos
     app.router.add_get('/{stream_id}{tail:/.*}', stream_handler)  # stream
 
-    if password.strip():
+    password = password.strip()
+    if password:
         password_prefix = f'/{password}'
         app_auth = web.Application()
         app_auth.add_subapp(password_prefix, app)
