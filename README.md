@@ -80,7 +80,7 @@ sudo -E env "PATH=$PATH" ustvgo-iptv uninstall-service
 
 ## ⚙️ Usage - GUI
 
-  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/201539903-a9ff24cf-289b-41ad-b835-531b509d1a01.png"/>
+  <img alt="USTVGO-IPTV GUI screenshot" width="614" src="https://user-images.githubusercontent.com/20641837/211169975-f11a3cdb-9d3a-4e40-9a2d-4442db985d55.png"/>
 
   If you don't like command line stuff, you can run GUI app and click "Start", simple as that.
   
