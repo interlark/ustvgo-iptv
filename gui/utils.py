@@ -109,7 +109,7 @@ def setup_text_widget(widget: tk.Text | tk.Entry, root: tk.Toplevel, *,
         elif isinstance(widget, tk.Text):
             widget.tag_add('sel', '1.0', 'end')
 
-    def ctrl_key_press(event) -> None:
+    def ctrl_key_press(event: tk.Event[Any]) -> None:
         """Generate CTRL + X, V, C, A events for non-english layouts."""
         if event.keycode == 88 and event.keysym.lower() != 'x':
             event.widget.event_generate('<<Cut>>')
