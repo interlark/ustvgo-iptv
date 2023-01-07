@@ -47,7 +47,7 @@ Channel = TypedDict('Channel', {'id': int, 'stream_id': str, 'tvguide_id': str,
 # mpv http://127.0.0.1:6363/ustvgo.m3u8
 
 
-VERSION = '0.1.11'
+VERSION = '0.1.12'
 USER_AGENT = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36')
 USTVGO_HEADERS = {'Referer': 'https://ustvgo.tv', 'User-Agent': USER_AGENT}
@@ -364,7 +364,7 @@ async def playlist_server(port: int, parallel: bool, tvguide_base_url: str,
     app.router.add_get('/logos/{filename:[^/]+}', logos_handler)  # logos
     app.router.add_get('/{stream_id}{tail:/.*}', stream_handler)  # stream
 
-    if password:
+    if password.strip():
         password_prefix = f'/{password}'
         app_auth = web.Application()
         app_auth.add_subapp(password_prefix, app)

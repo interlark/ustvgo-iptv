@@ -61,7 +61,7 @@ Two iconsets for IPTV players with light and dark backgrounds
 | --port 6363               | Server port. By default, the port is **6363**.           |
 | --parallel 10             | Number of parallel parsing requests. Default is **10**.          |
 | --use-uncompressed-tvguide| By default, master playlist has a link to **compressed** version of TV Guide:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml.gz"`<br/>With this argument you can switch it to uncompressed:<br/>`url-tvg="http://127.0.0.1:6363/tvguide.xml"`           |
-| --password &lt;PASSWORD&gt;             | Set password prefix for the URL.          |
+| --password &lt;PASSWORD&gt;             | Set password prefix for the URL.<br/>Could be used to prevent public playlists scraping.          |
 
 <br />
 
