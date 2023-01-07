@@ -66,7 +66,7 @@ async def app() -> None:
                                         default=settings['autostart'],
                                         key='-CHECK_AUTOSTART-',
                                         tooltip='Autostart USTVGO-IPTV'),
-                        ]], p=((16, 0), 0), expand_x=True),
+                        ]], p=((0 if sg.running_windows() else 16, 0), 0), expand_x=True),
                         sg.Column([[
                             sg.Text('Parallel', key='-LBL_PARALLEL-',
                                     tooltip='Number of parallel parsing requests'),
@@ -182,12 +182,11 @@ async def app() -> None:
             window['-BTN_START-'].update(visible=not state)
 
             # Switch focus between start\stop buttons
-            focused_element = window.find_element_with_focus()
-            if not focused_element.visible:
-                if focused_element is window['-BTN_STOP-']:
-                    window['-BTN_START-'].set_focus()
-                elif focused_element is window['-BTN_START-']:
-                    window['-BTN_STOP-'].set_focus()
+            focused_widget = window.TKroot.focus_get()
+            if focused_widget is window['-BTN_START-'].Widget and state:
+                window['-BTN_STOP-'].set_focus()
+            elif focused_widget is window['-BTN_STOP-'].Widget and not state:
+                window['-BTN_START-'].set_focus()
 
         except tk.TclError:
             pass  # Main window could be already destroyed by sg
