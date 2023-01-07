@@ -8,6 +8,10 @@ import ustvgo_iptv
 
 from .paths import config_path
 
+GUI_SETTINGS = {
+    'autostart': False,
+}
+
 
 def save_settings(settings: dict[str, Any]) -> None:
     """Save user settings."""
@@ -37,6 +41,8 @@ def load_settings() -> dict[str, Any]:
 def default_settings() -> dict[str, Any]:
     """Get default settings."""
     parser = ustvgo_iptv.args_parser()
-    return {x.dest: x.default for x in parser._actions
-            if x.default != argparse.SUPPRESS
-            and x.dest != argparse.SUPPRESS}
+    cli_settings = {x.dest: x.default for x in parser._actions
+                    if x.default != argparse.SUPPRESS
+                    and x.dest != argparse.SUPPRESS}
+
+    return {**cli_settings, **GUI_SETTINGS}

@@ -10,7 +10,7 @@ import ustvgo_iptv
 
 from .error_popup import error_popup
 from .paths import image_data
-from .settings import load_settings, save_settings
+from .settings import load_settings, save_settings, GUI_SETTINGS
 from .utils import patch_tqdm, setup_text_widget
 from .widgets import MultilineLog
 
@@ -61,6 +61,12 @@ async def app() -> None:
                                         key='-CHECK_UNCOMPRESSED_TVGUIDE-',
                                         tooltip='Use uncompressed TV Guide in master playlist'),
                         ]], p=0, expand_x=True),
+                        sg.Column([[
+                            sg.Checkbox(text='Autostart',
+                                        default=settings['autostart'],
+                                        key='-CHECK_AUTOSTART-',
+                                        tooltip='Autostart USTVGO-IPTV'),
+                        ]], p=((16, 0), 0), expand_x=True),
                         sg.Column([[
                             sg.Text('Parallel', key='-LBL_PARALLEL-',
                                     tooltip='Number of parallel parsing requests'),
@@ -127,7 +133,8 @@ async def app() -> None:
                       menu_paste=True, menu_cut=True, menu_copy=True)
 
     # Set disabled color
-    for key in ('-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-',
+    for key in ('-CHECK_ICONS_FOR_LIGHT_BG-',
+                '-CHECK_ACCESS_LOGS-', '-CHECK_AUTOSTART-',
                 '-CHECK_UNCOMPRESSED_TVGUIDE-', '-LBL_PORT-',
                 '-LBL_PARALLEL-', '-LBL_PASSWORD-'):
         window[key].widget.config(disabledforeground='snow3')
@@ -156,6 +163,7 @@ async def app() -> None:
         settings['use_uncompressed_tvguide'] = window['-CHECK_UNCOMPRESSED_TVGUIDE-'].get()
         settings['icons_for_light_bg'] = window['-CHECK_ICONS_FOR_LIGHT_BG-'].get()
         settings['access_logs'] = window['-CHECK_ACCESS_LOGS-'].get()
+        settings['autostart'] = window['-CHECK_AUTOSTART-'].get()
         settings['password'] = window['-IN_PASSWORD-'].get()
         return True
 
@@ -166,8 +174,8 @@ async def app() -> None:
                 window[key].widget.configure(state='disabled' if state else 'normal')
 
             for key in ('-IN_PORT-', '-IN_PARALLEL-', '-IN_PASSWORD-',
-                        '-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_ACCESS_LOGS-',
-                        '-CHECK_UNCOMPRESSED_TVGUIDE-'):
+                        '-CHECK_ICONS_FOR_LIGHT_BG-', '-CHECK_UNCOMPRESSED_TVGUIDE-',
+                        '-CHECK_ACCESS_LOGS-', '-CHECK_AUTOSTART-'):
                 window[key].update(disabled=state)
 
             window['-BTN_STOP-'].update(visible=state)
@@ -206,12 +214,41 @@ async def app() -> None:
     window['-LOG-'].finalize()
     window['-LOG-'].set_focus(force=True)
 
+    def start_server() -> None:
+        nonlocal background_task
+
+        # Sync settings
+        if sync_settings():
+            # Lock user inputs
+            lock_controls()
+
+            cli_settings = {k: v for k, v in settings.items() if k not in GUI_SETTINGS}
+            loop = asyncio.get_running_loop()
+            background_task = loop.create_task(
+                background_task_finished(
+                    ustvgo_iptv.playlist_server(**cli_settings)
+                )
+            )
+
+    def stop_server() -> None:
+        if background_task:
+            background_task.cancel()
+
+    if settings['autostart']:
+        start_server()
+
     # Main loop
     while True:
         event, values = await asyncio.ensure_future(read_window())
 
         # App exit
         if event in (None, '-BTN_EXIT-'):
+            # Sync settings
+            if sync_settings(verbose=False):
+                # Save settings
+                save_settings(settings)
+
+            # Stop and await running server
             if background_task and not background_task.done():
                 background_task.cancel()
                 await background_task
@@ -219,27 +256,13 @@ async def app() -> None:
 
         # Click "Start"
         elif event == '-BTN_START-':
-            # Sync settings
-            if not sync_settings():
-                continue
-
-            # Save settings
-            save_settings(settings)
-
-            # Lock user inputs
-            lock_controls()
-
-            loop = asyncio.get_running_loop()
-            background_task = loop.create_task(
-                background_task_finished(
-                    ustvgo_iptv.playlist_server(**settings)
-                )
-            )
+            # Start USTVGO server
+            start_server()
 
         # Click "Cancel"
         elif event == '-BTN_STOP-':
-            if background_task:
-                background_task.cancel()
+            # Stop USTVGO server
+            stop_server()
 
         # Update progress bar
         elif event == '@PROGRESS_UPDATE':
