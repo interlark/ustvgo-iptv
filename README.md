@@ -26,7 +26,7 @@ It **extracts stream URLs** from [ustvgo.tv](http://ustvgo.tv) website, **genera
 - [![](https://user-images.githubusercontent.com/20641837/173175879-aed31bd4-b188-4681-89df-5ffc3ea05a82.svg)](https://github.com/interlark/ustvgo-tvguide/tree/master/images/icons/channels)
 Two iconsets for IPTV players with light and dark backgrounds
   > There are 2 channel iconsets adapted for apps with light and dark UI themes.
-- 🗔 Cross-platform GUI
+- 🖥️ Cross-platform GUI
   > GUI is available for Windows, Linux and MacOS for people who are not that much into CLI.
 
 
